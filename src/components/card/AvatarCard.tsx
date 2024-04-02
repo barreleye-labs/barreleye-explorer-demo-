@@ -12,9 +12,9 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 
-import { NodeConfig } from '@pages/nodes/nodeConfig';
-
 import { Char } from '@utils';
+
+import { NodeConfig } from '@src/config/nodeConfig.ts';
 
 import { CardContainer, CardContent } from './styles';
 

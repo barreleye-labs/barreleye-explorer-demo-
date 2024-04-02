@@ -29,6 +29,7 @@
       "@pages/*": ["src/pages/*"],
       "@utils": ["src/utils/index"],
       "@type/*": ["src/types/*"],
+      "@config/*": ["src/config/*"],
       "@styles/*": ["src/styles/*"],
       "@router/*": ["src/router/*"]
     },

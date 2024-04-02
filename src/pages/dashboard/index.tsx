@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import FlagIcon from '@mui/icons-material/Flag';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PolylineIcon from '@mui/icons-material/Polyline';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import BlocksService from '@services/blocks';
+import TransactionsService from '@services/transactions.ts';
 
 import Blocks from '@pages/blocks';
 import Transactions from '@pages/transactions';
@@ -16,12 +20,17 @@ import Transactions from '@pages/transactions';
 import Link from '@components/link';
 import Logo from '@components/logo';
 
+import { Char } from '@utils';
+
+import nodesConfig from '@config/nodeConfig';
+
 import { Card, Container, DashboardTable, Highlight } from './styles';
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const { data } = BlocksService().GetAll({ size: 5, page: 1 });
+  const { data } = BlocksService().GetAll({ size: 7, page: 1 });
+  const { data: txData } = TransactionsService().GetAll({ size: 7, page: 1 });
 
   const BlockHeightCard = useCallback(() => {
     const height = Number(data?.totalCount) - 1;
@@ -38,12 +47,41 @@ const Dashboard = () => {
     return (
       <Highlight>
         <h2>
-          {data ? ((Number(data?.totalCount) - 1) * 10).toLocaleString('ko-KR') : '0'}
+          {data ? ((Number(data.totalCount) - 1) * 10).toLocaleString('ko-KR') : '0'}
           <span>Barrel</span>
         </h2>
       </Highlight>
     );
   }, [data]);
+
+  const BlockProposerCard = useCallback(() => {
+    const extra = data ? data.blocks[0].extra : '-';
+    return (
+      <Highlight>
+        <Link
+          onClick={() =>
+            navigate(
+              data
+                ? `/account/${Char.add0x(nodesConfig[`${extra}Config` as keyof typeof nodesConfig].ADDRESS)}`
+                : `/account`
+            )
+          }
+        >
+          <h2 style={{ fontSize: '22px' }}>{extra.toUpperCase()}</h2>
+        </Link>
+      </Highlight>
+    );
+  }, [data]);
+
+  const TotalTxCountCard = useCallback(() => {
+    return (
+      <Highlight>
+        <Link onClick={() => navigate(`/transactions`)}>
+          <h2>{txData ? txData.totalCount : '0'}</h2>
+        </Link>
+      </Highlight>
+    );
+  }, [txData]);
 
   return (
     <Container>
@@ -112,11 +150,39 @@ const Dashboard = () => {
       </Grid>
 
       <Grid container spacing={2} className="margin-spacing">
-        <Grid xs={16} className="signature-height">
+        <Grid xs={12} sm={12} md={6.5} className="signature-height">
           <Card>
             <div className="signature">
               <img src="src/assets/barreleye.png" />
               <Logo />
+            </div>
+          </Card>
+        </Grid>
+
+        <Grid xs={12} sm={6} md={2.75} className="signature-height">
+          <Card>
+            <div className="wrapper">
+              <div className="icon-wrapper ">
+                <FlagIcon />
+              </div>
+              <div>
+                <BlockProposerCard />
+                <h4>Current Block Proposer</h4>
+              </div>
+            </div>
+          </Card>
+        </Grid>
+
+        <Grid xs={12} sm={6} md={2.75} className="signature-height">
+          <Card>
+            <div className="wrapper">
+              <div className="icon-wrapper ">
+                <ReceiptLongIcon />
+              </div>
+              <div>
+                <TotalTxCountCard />
+                <h4>Total Tx Count</h4>
+              </div>
             </div>
           </Card>
         </Grid>

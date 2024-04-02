@@ -34,3 +34,5 @@ export const nayoungConfig: NodeConfig = {
   email: 'usiyoung7@gmail.com',
   github: 'https://github.com/usiyoung'
 };
+
+export default { barreleyeConfig, youngminConfig, nayoungConfig };
