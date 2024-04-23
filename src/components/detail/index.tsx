@@ -32,10 +32,10 @@ const Detail = (props: Props) => {
           action={
             isAction && (
               <>
-                <IconButton aria-label="settings" onClick={() => onClickPrev}>
+                <IconButton aria-label="settings" onClick={onClickPrev}>
                   <KeyboardArrowLeftIcon />
                 </IconButton>
-                <IconButton aria-label="settings" onClick={() => onClickAfter}>
+                <IconButton aria-label="settings" onClick={onClickAfter}>
                   <KeyboardArrowRightIcon />
                 </IconButton>
               </>
