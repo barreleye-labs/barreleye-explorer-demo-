@@ -6,10 +6,15 @@ jobs:
     steps:
       - run: echo 'Hello, GitHub Actions!'
  
-  checkout:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: ls -al
       - uses: actions/checkout@v3
-      - run: ls -al
-      - run: cat .github/workflows/first.yml
+       
+      - name: Docker Hub build & push
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker rmi $(docker images -qa)
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }} .
+          docker images
+          docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
