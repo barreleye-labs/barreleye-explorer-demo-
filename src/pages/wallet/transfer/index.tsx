@@ -207,7 +207,7 @@ const Transfer = () => {
                     onChange={onChange}
                     type="number"
                     label="Amount to Send"
-                    placeholder="0.000000"
+                    placeholder="0"
                   />
                 </div>
               </>
