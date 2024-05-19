@@ -5,11 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Hello, GitHub Actions!'
-  pwd-ls:
-    name: PWD & LS
+ 
+  checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: Print working directory
-        run: pwd
-      - name: List files
-        run: ls -al
+      - run: ls -al
+      - uses: actions/checkout@v3
+      - run: ls -al
+      - run: cat .github/workflows/checkout.yml
