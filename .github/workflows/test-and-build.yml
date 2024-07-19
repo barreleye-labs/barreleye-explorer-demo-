@@ -67,8 +67,8 @@ jobs:
           echo 'docker ps -a' >> remote-script.sh
           echo 'sudo docker stop ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
           echo 'sudo docker rm ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
-          echo 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest' >> remote-script.sh
-          echo 'sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest' >> remote-script.sh
+          echo 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0' >> remote-script.sh
+          echo 'sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0' >> remote-script.sh
           echo 'sudo docker ps -a' >> remote-script.sh
           echo 'sudo chmod +x ./barreleyescan.sh' >> remote-script.sh
           echo 'sudo ./barreleyescan.sh' >> remote-script.sh
