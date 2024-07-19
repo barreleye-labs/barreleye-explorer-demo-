@@ -49,9 +49,11 @@ jobs:
         run : |
           echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
           docker rmi $(docker images -qa)
-          docker build -t ${{ secrets.DOCKER_REPO }}:1.0.0 .
+          # 명확한 이미지 이름과 태그 지정
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0 .
           docker images
-          docker push ${{ secrets.DOCKER_REPO }}:1.0.0
+          # 명확한 이미지 이름과 태그 지정
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0
           
       - name: Deploy on EC2 instance
         uses: appleboy/ssh-action@v0.1.6
@@ -65,8 +67,10 @@ jobs:
             docker ps -a
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             sudo docker rm ${{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
+            # 명확한 이미지 이름과 태그 지정
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0
+            # 명확한 이미지 이름과 태그 지정
+            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0
             sudo docker ps -a
             sudo chmod +x ./barreleyescan.sh
             sudo ./barreleyescan.sh
