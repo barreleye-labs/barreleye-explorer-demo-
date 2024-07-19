@@ -69,7 +69,7 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
           <SkeletonTable columns={isSimpleData ? 5 : 7} size={size} />
         ) : (
           data?.blocks.map((row: Block) => (
-            <TableRow key={row.height} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableRow data-cy="block_items" key={row.height} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell>
                 <LinkUnderline path={`/block/${row.height}`} underlink={row.height.toString()}></LinkUnderline>
               </TableCell>

@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import type { ColorPaletteProp, VariantProp } from '@mui/joy';
 import DefaultButton from '@mui/joy/Button';
