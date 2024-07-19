@@ -54,13 +54,14 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
           
       - name: Deploy on EC2 instance
-        uses: appleboy/ssh-action@v0.1.6
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_IP_ADDRESS }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            whoami
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             sudo docker rm ${{ secrets.DOCKER_REPO }} || true
