@@ -52,6 +52,7 @@ jobs:
           host: ${{ secrets.EC2_IP_ADDRESS }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
