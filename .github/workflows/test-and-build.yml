@@ -37,12 +37,40 @@ jobs:
       - name: Run Cypress tests
         run: npm run test
 
-      - name: Docker Hub build & push
+      - name: Configure AWS credentials
         if: success()
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker Hub build & push
         run : |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker rmi $(docker images -qa)
           docker build -t ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }} .
           docker images
           docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
-
+          
+      - name: Deploy on EC2 instance
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ env.EC2_IP_ADDRESS }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/Eye_of_AI_Client
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set region ${{ env.AWS_REGION }}
+            ECR_REGISTRY_LOGIN=$(aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }})
+            sudo docker stop ${{ env.DOCKER_REPO }} || true
+            sudo docker rm ${{ env.DOCKER_REPO }} || true
+            sudo docker pull ${{ env.DOCKER_USERNAME2 }}/${{ env.DOCKER_REPO }}:1.0.0
+            sudo ./barreleyescan.sh
+            
