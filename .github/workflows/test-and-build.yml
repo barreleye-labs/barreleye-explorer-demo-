@@ -61,11 +61,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            whoami
-            sudo chown root:docker /var/run/docker.sock
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            docker ps -a
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             sudo docker rm ${{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
+            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker ps -a
+            sudo chmod +x ./barreleyescan.sh
             sudo ./barreleyescan.sh
             
