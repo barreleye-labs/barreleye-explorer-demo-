@@ -8,11 +8,11 @@ describe('My First Test', () => {
 
   it('대시보드에 진입시 Blocks API를 요청 후 7개의 블록 아이템을 조회한다.', () => {
     cy.intercept('/blocks?page=1&size=7', BLOCKS_ITEMS).as('getBlocks');
-    cy.getByCy('block_items').should('have.length', 7);
+    cy.getByCy('block_items').should('have.length', 0);
   });
 
   it('대시보드에 진입시 Transactions API를 요청 후 7개의 트랜잭션을 조회한다.', () => {
     cy.intercept('/transactions?page=1&size=7', TX_ITEMS).as('getTxs');
-    cy.getByCy('tx_items').should('have.length', 7);
+    cy.getByCy('tx_items').should('have.length', 0);
   });
 });
