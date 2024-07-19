@@ -55,19 +55,25 @@ jobs:
           # 명확한 이미지 이름과 태그 지정
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0
           
-      - name: Deploy on EC2 instance
-        if: success()
+      - name: Create SSH key file
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} -t << 'EOF'
-            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            docker ps -a
-            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
-            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
-            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
-            sudo docker ps -a
-            sudo chmod +x ./barreleyescan.sh
-            sudo ./barreleyescan.sh
-          EOF
+
+      - name: Create remote script
+        run: |
+          echo '#!/bin/bash' > remote-script.sh
+          echo 'echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin' >> remote-script.sh
+          echo 'docker ps -a' >> remote-script.sh
+          echo 'sudo docker stop ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
+          echo 'sudo docker rm ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
+          echo 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest' >> remote-script.sh
+          echo 'sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest' >> remote-script.sh
+          echo 'sudo docker ps -a' >> remote-script.sh
+          echo 'sudo chmod +x ./barreleyescan.sh' >> remote-script.sh
+          echo 'sudo ./barreleyescan.sh' >> remote-script.sh
+
+      - name: Deploy on EC2 instance
+        run: |
+          scp -o StrictHostKeyChecking=no -i key.pem remote-script.sh ubuntu@${{ secrets.EC2_IP_ADDRESS }}:~/remote-script.sh
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} "chmod +x ~/remote-script.sh && ~/remote-script.sh"
