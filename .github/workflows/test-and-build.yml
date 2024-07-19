@@ -58,7 +58,7 @@ jobs:
       - name: Create SSH key file
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
 
       - name: Create remote script
         run: |
