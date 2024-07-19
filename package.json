@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "cypress open",
+    "test": "cypress run",
     "dev": "vite --host",
     "start:dev": "NODE_ENV=development vite --host",
     "start:prod": "NODE_ENV=production1 vite --host",
