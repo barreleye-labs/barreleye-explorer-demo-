@@ -61,7 +61,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             sudo docker rm ${{ secrets.DOCKER_REPO }} || true
             sudo docker pull ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
