@@ -60,13 +60,13 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > key.pem
           chmod 400 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} -t << 'EOF'
             echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             docker ps -a
-            sudo docker stop {{ secrets.DOCKER_REPO }} || true
-            sudo docker rm {{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/{{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker run -d --name {{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/{{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
+            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
+            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
             sudo docker ps -a
             sudo chmod +x ./barreleyescan.sh
             sudo ./barreleyescan.sh
