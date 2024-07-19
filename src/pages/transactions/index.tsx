@@ -82,7 +82,7 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
             <SkeletonTable columns={isSimpleData ? 6 : 7} size={size} />
           ) : (
             data.transactions.map((row: Transaction) => (
-              <TableRow key={row.hash} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableRow data-cy="tx-items" key={row.hash} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell style={{ width: 130 }} align="left">
                   <LinkUnderline
                     path={`/transaction/${Char.add0x(row.hash)}`}

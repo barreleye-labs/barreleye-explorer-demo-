@@ -1,16 +1,19 @@
+
+
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2020: true,'cypress/globals': true },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
+    "plugin:cypress/recommended"
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', '@typescript-eslint'],
+  plugins: ['react-refresh', '@typescript-eslint', 'cypress'],
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
   },
@@ -21,5 +24,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': [2, { args: 'none' }]
       }
     }
-  ]
+    ],
 };
+
+

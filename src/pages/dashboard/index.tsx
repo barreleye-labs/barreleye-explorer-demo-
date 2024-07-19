@@ -7,7 +7,6 @@ import FlagIcon from '@mui/icons-material/Flag';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Grid from '@mui/material/Unstable_Grid2';
 
