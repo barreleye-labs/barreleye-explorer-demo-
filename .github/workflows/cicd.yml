@@ -56,7 +56,7 @@ jobs:
             fi
 
             # Remove the Docker image
-            echo "Removing containers based on image..."
+            echo "Removing Docker image..."
             IMAGE_ID=$(sudo docker images --format "{{.ID}}" ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }})
             echo "Image ID: $IMAGE_ID"
             if [ -n "$IMAGE_ID" ]; then
