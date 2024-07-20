@@ -53,21 +53,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy on EC2 instance
-        uses: appleboy/ssh-action@master
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_IP_ADDRESS }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            docker ps -a
-            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
-            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker ps -a
-            sudo chmod +x ./barreleyescan.sh
-            sudo ./barreleyescan.sh
-            
+          script: whoami
+
