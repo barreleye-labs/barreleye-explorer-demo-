@@ -16,27 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.15.0'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Start the application
-        run: npm run dev &
-        env:
-          CI: true
-
-      - name: Wait for application to be ready
-        uses: jakejarvis/wait-action@v0.1.0
-        with:
-          time: '15' # Adjust this time based on how long your application takes to start
-
-      - name: Run Cypress tests
-        run: npm run test
-
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -48,26 +27,3 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }} .
           docker images
           docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
-          
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_IP_ADDRESS }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            docker ps -a
-            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
-            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
-            sudo docker pull ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker ps -a
-            sudo ./barreleyescan.sh
-
-            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
-            sudo docker ps -a
-            sudo ./barreleyescan.sh

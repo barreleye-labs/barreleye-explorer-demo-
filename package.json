@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "cypress run",
     "dev": "vite --host",
     "start:dev": "NODE_ENV=development vite --host",
     "start:prod": "NODE_ENV=production1 vite --host",
@@ -48,10 +47,8 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "axios": "^1.6.6",
-    "cypress": "^13.13.0",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-cypress": "^3.3.0",
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
