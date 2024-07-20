@@ -12,7 +12,7 @@ const BarreleyeLogo = () => {
         Barreleye
       </span>
       &nbsp;
-      <span onClick={() => navigate('/dashboard')}>scan</span>
+      <span onClick={() => navigate('/dashboard')}>scan!</span>
     </Logo>
   );
 };
