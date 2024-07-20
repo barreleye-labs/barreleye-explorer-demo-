@@ -37,7 +37,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands
+      - name: Deployment
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_IP_ADDRESS }}
