@@ -39,7 +39,11 @@ jobs:
             whoami
             docker ps -a
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
-            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
+            CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
+            if [ -n "$CONTAINER_IDS" ]; then
+            sudo docker rm -f $CONTAINER_IDS
+            fi
+
             sudo docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
             sudo docker ps -a
             sudo ./barreleyescan.sh
