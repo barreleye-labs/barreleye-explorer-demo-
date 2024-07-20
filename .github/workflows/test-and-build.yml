@@ -37,6 +37,7 @@ jobs:
       - name: Run Cypress tests
         run: npm run test
 
+<<<<<<< HEAD
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -49,9 +50,10 @@ jobs:
           docker images
           docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
           
+=======
+>>>>>>> 7a2dce12d63a8606add474fd64b57360a29aab0d
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
@@ -64,8 +66,15 @@ jobs:
             docker ps -a
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             sudo docker rm ${{ secrets.DOCKER_REPO }} || true
+<<<<<<< HEAD
             sudo docker pull ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}:1.0.0
             sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
             sudo docker ps -a
             sudo ./barreleyescan.sh
 
+=======
+            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker ps -a
+            sudo ./barreleyescan.sh
+>>>>>>> 7a2dce12d63a8606add474fd64b57360a29aab0d
