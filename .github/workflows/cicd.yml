@@ -16,9 +16,7 @@ jobs:
         run : |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker rmi $(docker images -qa)
-          docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
-          docker images
-          docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
+        
   
   deploy:
     runs-on: ubuntu-latest
