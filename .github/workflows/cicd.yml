@@ -15,9 +15,7 @@ jobs:
       - name: Docker Hub build & push
         run : |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker images
           docker rmi $(docker images -qa)
-          docker images
           docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
           docker images
           docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
