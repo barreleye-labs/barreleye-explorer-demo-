@@ -37,11 +37,22 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             whoami
+            
             docker ps -a
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
             if [ -n "$CONTAINER_IDS" ]; then
             sudo docker rm -f $CONTAINER_IDS
+            fi
+
+            docker images
+            IMAGE_ID=$(sudo docker images --format "{{.ID}}" ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }})
+            echo "Image ID: $IMAGE_ID"
+            if [ -n "$IMAGE_ID" ]; then
+            sudo docker rmi -f $IMAGE_ID
+            echo "Deleted image with ID: $IMAGE_ID"
+            else
+            echo "No image found for ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}"
             fi
 
             sudo docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
