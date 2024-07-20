@@ -18,6 +18,17 @@ jobs:
           docker images
           docker rmi $(docker images -qa)
           docker images
-          docker build -t ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }} .
+          docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
           docker images
-          docker push ${{ secrets.DOCKER_USERNAME2 }}/${{ secrets.DOCKER_REPO }}
+          docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_IP_ADDRESS }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: whoami
