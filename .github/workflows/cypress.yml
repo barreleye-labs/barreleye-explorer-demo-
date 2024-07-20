@@ -1,0 +1,30 @@
+name: Cypress Test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.15.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start the application
+        run: npm run dev &
+        env:
+          CI: true
+
+      - name: Wait for application to be ready
+        uses: jakejarvis/wait-action@v0.1.0
+        with:
+          time: '15' # Adjust this time based on how long your application takes to start
+
+      - name: Run Cypress tests
+        run: npm run test
