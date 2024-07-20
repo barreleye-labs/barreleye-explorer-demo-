@@ -51,6 +51,7 @@ jobs:
              # Remove containers based on image
             echo "Removing containers based on image..."
             CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
+            echo "Image ID: $CONTAINER_IDS"
             if [ -n "$CONTAINER_IDS" ]; then
             sudo docker rm -f $CONTAINER_IDS
             fi
