@@ -9,7 +9,7 @@ on:
       - develop
 
 jobs:
-  test:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,18 +37,43 @@ jobs:
       - name: Run Cypress tests
         run: npm run test
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Docker Hub build & push
+        if: success()
         run : |
           echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
           docker rmi $(docker images -qa)
-          docker build -t ${{ secrets.DOCKER_REPO }}:1.0.0 .
+          # 명확한 이미지 이름과 태그 지정
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0 .
           docker images
-          docker push ${{ secrets.DOCKER_REPO }}:1.0.0
+          # 명확한 이미지 이름과 태그 지정
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0
+          
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
 
+      - name: Create remote script
+        run: |
+          echo '#!/bin/bash' > remote-script.sh
+          echo 'echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin' >> remote-script.sh
+          echo 'docker ps -a' >> remote-script.sh
+          echo 'sudo docker stop ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
+          echo 'sudo docker rm ${{ secrets.DOCKER_REPO }} || true' >> remote-script.sh
+          echo 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0' >> remote-script.sh
+          echo 'sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0.0' >> remote-script.sh
+          echo 'sudo docker ps -a' >> remote-script.sh
+          echo 'sudo chmod +x ./barreleyescan.sh' >> remote-script.sh
+          echo 'sudo ./barreleyescan.sh' >> remote-script.sh
+
+<<<<<<< HEAD
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -61,3 +86,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: whoami
 
+=======
+      - name: Deploy on EC2 instance
+        run: |
+          scp -o StrictHostKeyChecking=no -i key.pem remote-script.sh ubuntu@${{ secrets.EC2_IP_ADDRESS }}:~/remote-script.sh
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP_ADDRESS }} "chmod +x ~/remote-script.sh && ~/remote-script.sh"
+>>>>>>> 3ad0ef6f994f14d14afcd59f65da1e952ac43d39
