@@ -37,20 +37,8 @@ jobs:
       - name: Run Cypress tests
         run: npm run test
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Docker Hub build & push
-        run : |
-          echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker rmi $(docker images -qa)
-          docker build -t ${{ secrets.DOCKER_REPO }}:1.0.0 .
-          docker images
-          docker push ${{ secrets.DOCKER_REPO }}:1.0.0
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
