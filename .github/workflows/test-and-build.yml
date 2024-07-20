@@ -47,5 +47,11 @@ jobs:
           host: ${{ secrets.EC2_IP_ADDRESS }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: whoami
-
+          script: |
+            docker ps -a
+            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
+            sudo docker rm ${{ secrets.DOCKER_REPO }} || true
+            sudo docker pull ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker run -d --name ${{ secrets.DOCKER_REPO }} ${{ secrets.DOCKER_REPO }}:1.0.0
+            sudo docker ps -a
+            sudo ./barreleyescan.sh
