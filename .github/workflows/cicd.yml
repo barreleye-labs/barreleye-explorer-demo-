@@ -1,4 +1,4 @@
-name: Build and Deploy
+name:  Cypress Test and Docker Build/Push
 
 on:
   push:
@@ -9,72 +9,31 @@ on:
       - develop
 
 jobs:
-  build:
+  cypress-run:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Remove all Docker images
-        run: |
-          docker rmi $(docker images -qa)
-          
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
-
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
-          
-        
-  
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deployment
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          host: ${{ secrets.EC2_IP_ADDRESS }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            # Stop running container
-            echo "Stopping running container..."
-            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
-            
-             # Remove containers based on image
-            echo "Removing containers based on image..."
-            CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
-            echo "Containers ID: $CONTAINER_IDS"
-            if [ -n "$CONTAINER_IDS" ]; then
-            sudo docker rm -f $CONTAINER_IDS
-            fi
+          node-version: '20.15.0'
 
-            # Remove the Docker image
-            echo "Removing Docker image..."
-            IMAGE_ID=$(sudo docker images --format "{{.ID}}" ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }})
-            echo "Image ID: $IMAGE_ID"
-            if [ -n "$IMAGE_ID" ]; then
-            sudo docker rmi -f $IMAGE_ID
-            echo "Deleted image with ID: $IMAGE_ID"
-            else
-            echo "No image found for ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}"
-            fi
-            
-            # Pull the latest Docker image
-            echo "Pulling the latest Docker image..."
-            sudo docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
+      - name: Install dependencies
+        run: npm install
 
-            # Execute the custom script
-            echo "Executing custom script: barreleyescan.sh"
-            sudo ./barreleyescan.sh
+      - name: Start the application
+        run: npm run dev &
+        env:
+          CI: true
 
+      - name: Wait for application to be ready
+        uses: jakejarvis/wait-action@v0.1.0
+        with:
+          time: '30' # Adjust this time based on how long your application takes to start
 
-
+      - name: Run Cypress tests
+        run: npm cypress run
 
