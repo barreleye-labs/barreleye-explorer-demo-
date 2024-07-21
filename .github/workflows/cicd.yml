@@ -59,4 +59,49 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: |
           docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
-          
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_IP_ADDRESS }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            # Stop running container
+            echo "Stopping running container..."
+            sudo docker stop ${{ secrets.DOCKER_REPO }} || true
+            
+             # Remove containers based on image
+            echo "Removing containers based on image..."
+            CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
+            echo "Containers ID: $CONTAINER_IDS"
+            if [ -n "$CONTAINER_IDS" ]; then
+            sudo docker rm -f $CONTAINER_IDS
+            fi
+  
+            # Remove the Docker image
+            echo "Removing Docker image..."
+            IMAGE_ID=$(sudo docker images --format "{{.ID}}" ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }})
+            echo "Image ID: $IMAGE_ID"
+            if [ -n "$IMAGE_ID" ]; then
+            sudo docker rmi -f $IMAGE_ID
+            echo "Deleted image with ID: $IMAGE_ID"
+            else
+            echo "No image found for ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}"
+            fi
+            
+            # Pull the latest Docker image
+            echo "Pulling the latest Docker image..."
+            sudo docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
+  
+            # Execute the custom script
+            echo "Executing custom script: barreleyescan.sh"
+            sudo ./barreleyescan.sh
+  
+  
+  
+  
