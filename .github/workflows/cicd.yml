@@ -35,5 +35,5 @@ jobs:
           time: '30' # Adjust this time based on how long your application takes to start
 
       - name: Run Cypress tests
-        run: npm cypress run
+        run: npm run test
 
