@@ -1,5 +1,5 @@
 declare namespace API {
-  interface Response<T = any> {
+  interface Response<T = never> {
     data: T;
     statusCode: number;
     error?: Error;

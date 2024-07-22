@@ -1,4 +1,3 @@
-// @ts-ignore
 import { ElementType } from 'react';
 
 import loadable from '@loadable/component';

@@ -34,6 +34,7 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
       // desktop
       setMobile(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigator.userAgent]);
 
   const [page, setPage] = useState(1);
@@ -51,7 +52,10 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
         underlink={!isSimpleData ? Char.add0x(Char.ellipsis(value)) : Char.add0x(Char.ellipsis8(value))}
       ></LinkUnderline>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const count = useMemo(() => (data ? Math.ceil(data.totalCount / size) : 1), [data]);
 
   return (

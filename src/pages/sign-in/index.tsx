@@ -12,12 +12,14 @@ const SignIn = () => {
   const [privateKey, setPrivateKey] = useState('');
   const setCommonPrivateKey = commonPrivateKeyStore((state) => state.set);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSession] = useSessionStorage<string>('key');
 
   const onSubmit = useCallback(() => {
     setSession(privateKey as string);
     setCommonPrivateKey(privateKey);
     navigate('/dashboard');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey]);
 
   return (

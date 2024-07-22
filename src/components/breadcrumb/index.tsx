@@ -1,13 +1,9 @@
-import { Char } from '@utils';
-
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import HomeIcon from '@mui/icons-material/Home';
 
-
-
-
+import { Char } from '@utils';
 
 import { Breadcrumbs } from './styles';
 
@@ -18,7 +14,7 @@ const Breadcrumb = () => {
 
   useEffect(() => {
     setHeight(locationArr[2]);
-  }, [height]);
+  }, [height, locationArr]);
 
   return (
     <Breadcrumbs separator="/" aria-label="breadcrumb">

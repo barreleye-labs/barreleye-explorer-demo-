@@ -43,8 +43,9 @@ function useSessionStorage<T>(key: string): UseSessionStorage<T> {
 
   useEffect(() => {
     if (getSession()) {
-      sessionToAddress();
+      sessionToAddress().then(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   return [getSession, setSession, removeSession, address];

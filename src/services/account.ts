@@ -2,7 +2,6 @@ import { AccountResponse } from '@type/dto/account';
 
 import useApi from '@hooks/useApi.ts';
 
-
 import { service } from '@src/utils/http';
 
 const AccountService = () => {

@@ -40,6 +40,7 @@ const Dashboard = () => {
         </Link>
       </Highlight>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const SupplyCard = useCallback(() => {
@@ -70,6 +71,7 @@ const Dashboard = () => {
         </Link>
       </Highlight>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const TotalTxCountCard = useCallback(() => {
@@ -80,6 +82,7 @@ const Dashboard = () => {
         </Link>
       </Highlight>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txData]);
 
   return (

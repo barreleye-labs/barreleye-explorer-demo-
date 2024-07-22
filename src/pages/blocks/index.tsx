@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
@@ -43,12 +43,14 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
   const { data } = BlocksService().GetAll({ page, size });
 
   const handleChange = useCallback(
-    (_, value: number) => {
+    (_e: ChangeEvent, value: number) => {
       setPage(value);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [page]
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const count = useMemo(() => (data ? Math.ceil(data.totalCount / size) : 1), [data]);
 
   return (

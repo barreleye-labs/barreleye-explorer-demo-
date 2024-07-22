@@ -34,6 +34,7 @@ const Faucet = () => {
       variant,
       anchorOrigin: { vertical: 'top', horizontal: 'right' }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAccount = async (address = accountAddress) => {
@@ -79,6 +80,7 @@ const Faucet = () => {
 
       fetchAccount();
     }, 13000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddress]);
 
   const disabled = useMemo(() => !accountAddress || isBalanceEnoughError, [accountAddress, isBalanceEnoughError]);
