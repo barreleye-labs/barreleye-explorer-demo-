@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { Time } from '@utils';
-
 import useInterval from '@hooks/useInterval.ts';
+
+import { Time } from '@utils';
 
 interface Props {
   data: number;

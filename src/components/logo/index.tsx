@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import Link from '@components/link';
-
 import { Logo } from './styles';
 
 const BarreleyeLogo = () => {

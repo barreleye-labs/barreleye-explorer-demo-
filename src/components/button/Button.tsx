@@ -4,7 +4,7 @@ import type { ColorPaletteProp, VariantProp } from '@mui/joy';
 import DefaultButton from '@mui/joy/Button';
 
 interface Props {
-  text: any;
+  text: string;
   variant?: VariantProp;
   size?: 'sm' | 'md' | 'lg';
   color?: ColorPaletteProp;

@@ -1,11 +1,11 @@
 import { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { type RouteContent } from '../routes';
-
 import { ListItemContent, ListItemDecorator } from '@mui/joy';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
+
+import { type RouteContent } from '../routes';
 
 interface Props {
   content: RouteContent[];

@@ -53,14 +53,15 @@ const Transfer = () => {
     setTx(txDefaultData());
     setStep(1);
     setPrivateKey('');
-  }, []);
+  }, [setPrivateKey, setTx]);
 
   useEffect(() => {
     if (commonPrivateKey) {
       setTx({ ...tx, from: commonAddress });
       setPrivateKey(commonPrivateKey);
-      fetchAccount();
+      fetchAccount().then(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showToast = useCallback(({ variant, message }: { variant: 'success' | 'error'; message: string }) => {
@@ -68,6 +69,7 @@ const Transfer = () => {
       variant,
       anchorOrigin: { vertical: 'top', horizontal: 'right' }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSigner = useCallback(() => Crypto.generatePublicKey(privateKey), [privateKey]);
@@ -129,6 +131,7 @@ const Transfer = () => {
       !commonPrivateKey && initData();
       setLoading(BTN_TYPE.TRANSFER);
     }, 13000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tx]);
 
   const isValidAddress = (): boolean => {
@@ -160,6 +163,7 @@ const Transfer = () => {
     }
 
     if (isValidAddress()) await sendTransaction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, tx, step]);
 
   const disabled = useMemo(() => (step === 1 ? !privateKey : !tx.to || !tx.value), [tx, step, privateKey]);

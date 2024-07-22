@@ -28,6 +28,7 @@ const Account = () => {
     if (address) {
       fetchAccount();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   async function fetchAccount() {
@@ -45,6 +46,7 @@ const Account = () => {
       variant,
       anchorOrigin: { vertical: 'top', horizontal: 'right' }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onValidCheck = debounce(async (address: string) => {
@@ -55,6 +57,7 @@ const Account = () => {
 
   const onChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     onValidCheck(Char.remove0x(e.target.value));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

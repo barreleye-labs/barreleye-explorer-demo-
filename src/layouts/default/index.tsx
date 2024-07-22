@@ -21,7 +21,7 @@ import { Char, Crypto } from '@utils';
 
 import { commonPrivateKeyStore } from '@src/stores';
 
-import { ButtonWrapper, Container, Header } from './styles';
+import { ButtonWrapper, Container } from './styles';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -44,6 +44,7 @@ const DefaultLayout = () => {
   const setCommonAddress = commonPrivateKeyStore((state) => state.setAddress);
   const commonAddress = commonPrivateKeyStore((state) => state.address);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [getSession, _, removeSession] = useSessionStorage<string>('key');
   const privateKey = getSession();
   const { data } = AccountService().GetOneByIdQuery(commonAddress && commonAddress, {
@@ -51,6 +52,7 @@ const DefaultLayout = () => {
   });
   const modalHandle = useCallback(() => {
     setOpen((open) => !open);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const onConfirm = () => {
@@ -65,10 +67,12 @@ const DefaultLayout = () => {
     if (privateKey) {
       setCommonPrivateKey(privateKey.toString());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    fetchAddress();
+    fetchAddress().then(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commonPrivateKey]);
 
   const fetchAddress = async () => {

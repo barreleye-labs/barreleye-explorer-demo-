@@ -13,7 +13,7 @@ export function App() {
 
   useEffect(() => {
     if (pathname === '/') navigate('/dashboard');
-  }, [pathname]);
+  }, [pathname, navigate]);
 
   return (
     <SnackbarProvider maxSnack={3}>

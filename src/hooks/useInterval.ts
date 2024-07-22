@@ -1,9 +1,9 @@
-import { MutatorCallback } from 'swr';
-
 import { MutableRefObject, useEffect, useRef } from 'react';
 
+import { MutatorCallback } from 'swr';
+
 function useInterval(callback: MutatorCallback, delay: number) {
-  const savedCallback: MutableRefObject<MutatorCallback> = useRef();
+  const savedCallback: MutableRefObject<MutatorCallback | undefined> = useRef();
 
   useEffect(() => {
     savedCallback.current = callback;
@@ -11,7 +11,9 @@ function useInterval(callback: MutatorCallback, delay: number) {
 
   useEffect(() => {
     function tick() {
-      savedCallback.current();
+      if (savedCallback.current) {
+        savedCallback.current();
+      }
     }
     if (delay !== null) {
       const id = setInterval(tick, delay);

@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
-import { barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConfig';
-
 import AccountService from '@services/account';
 
 import AvatarCard from '@components/card/AvatarCard';
+
+import { barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConfig';
 
 import { Stack } from './styles';
 

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-
 import { teal } from '@mui/material/colors';
 
 export const Container = styled.div`
