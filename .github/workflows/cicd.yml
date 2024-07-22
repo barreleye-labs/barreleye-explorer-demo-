@@ -21,14 +21,24 @@ jobs:
         with:
           node-version: '20.15.0'
 
-      - name: Cache dependencies
-        id: cache
+      - name: Cache node_modules
+        id: cache-node-modules
         uses: actions/cache@v3
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-node-modules-
+
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
