@@ -7,9 +7,6 @@ export const Container = styles.div`
     gap:1rem;
   }
 
-.MuiCardHeader-root{
-  
-}
   .MuiCardHeader-root,
   .MuiCardContent-root{
     padding: 24px;
@@ -39,7 +36,4 @@ export const Container = styles.div`
   .MuiPaper-rounded{
     border-radius: 16px;
   }
-
-  
-
 `;

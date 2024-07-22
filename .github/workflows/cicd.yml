@@ -21,18 +21,33 @@ jobs:
         with:
           node-version: '20.15.0'
 
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
 
       - name: Start the application
         run: npm run dev &
         env:
           CI: true
-
-      - name: Wait for application to be ready
-        uses: jakejarvis/wait-action@v0.1.0
-        with:
-          time: '30' # Adjust this time based on how long your application takes to start
 
       - name: Run Cypress tests
         run: npm run test
