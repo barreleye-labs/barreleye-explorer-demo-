@@ -27,7 +27,7 @@ jobs:
         run: echo 'npm cache missed!'
       - run: npm ci
       - name: Start the application
-        run: npm run dev &
+        run: npm run start:prod &
         env:
           CI: true
 
