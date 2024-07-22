@@ -1,4 +1,4 @@
-name:  Cypress Test and Docker Build/Push
+name: Cypress Test and Docker Build/Push
 
 on:
   push:
@@ -21,13 +21,31 @@ jobs:
         with:
           node-version: '20.15.0'
 
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
 
       - name: Start the application
         run: npm run dev &
         env:
           CI: true
+
+      - name: Cache Cypress results
+        uses: actions/cache@v3
+        with:
+          path: cypress/results
+          key: ${{ runner.os }}-cypress-${{ hashFiles('cypress/**/*.js') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
 
       - name: Run Cypress tests
         run: npm run test
@@ -43,13 +61,18 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Remove all Docker images
-        run: |
-          docker rmi $(docker images -qa)
+      - name: Cache Docker layers
+        id: docker-cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.docker-cache
+          key: ${{ runner.os }}-docker-${{ hashFiles('Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
+          DOCKER_BUILDKIT=1 docker build --cache-from=type=local,src=/tmp/.docker-cache --cache-to=type=local,dest=/tmp/.docker-cache -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }} .
 
       - name: Push Docker image to Docker Hub
         run: |
@@ -70,33 +93,29 @@ jobs:
             echo "Stopping running container..."
             sudo docker stop ${{ secrets.DOCKER_REPO }} || true
             
-             # Remove containers based on image
+            # Remove containers based on image
             echo "Removing containers based on image..."
             CONTAINER_IDS=$(sudo docker ps -f "ancestor=${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}" --format "{{.ID}}")
             echo "Containers ID: $CONTAINER_IDS"
             if [ -n "$CONTAINER_IDS" ]; then
-            sudo docker rm -f $CONTAINER_IDS
+              sudo docker rm -f $CONTAINER_IDS
             fi
-  
+            
             # Remove the Docker image
             echo "Removing Docker image..."
             IMAGE_ID=$(sudo docker images --format "{{.ID}}" ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }})
             echo "Image ID: $IMAGE_ID"
             if [ -n "$IMAGE_ID" ]; then
-            sudo docker rmi -f $IMAGE_ID
-            echo "Deleted image with ID: $IMAGE_ID"
+              sudo docker rmi -f $IMAGE_ID
+              echo "Deleted image with ID: $IMAGE_ID"
             else
-            echo "No image found for ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}"
+              echo "No image found for ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}"
             fi
             
             # Pull the latest Docker image
             echo "Pulling the latest Docker image..."
             sudo docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPO }}
-  
+            
             # Execute the custom script
             echo "Executing custom script: barreleyescan.sh"
             sudo ./barreleyescan.sh
-  
-  
-  
-  
