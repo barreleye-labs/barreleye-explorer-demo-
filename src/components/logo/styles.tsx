@@ -13,9 +13,9 @@ export const Logo = styled.div`
   height: 90px;
   color: white;
   line-height: 90px;
-
   text-align: center;
   font-weight: 600;
+
   > span {
     cursor: pointer;
     font-weight: 100;

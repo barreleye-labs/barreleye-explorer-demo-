@@ -13,8 +13,6 @@ export const Modal = styles(IModal)`
     padding: 41px 50px 31px;
   }
   
-  .MuiModalDialog-root {}
-  
   .MuiCardOverflow-root {
     align-items: baseline;
     gap: 27px;

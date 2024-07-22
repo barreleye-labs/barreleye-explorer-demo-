@@ -29,11 +29,6 @@ jobs:
         env:
           CI: true
 
-      - name: Wait for application to be ready
-        uses: jakejarvis/wait-action@v0.1.0
-        with:
-          time: '30' # Adjust this time based on how long your application takes to start
-
       - name: Run Cypress tests
         run: npm run test
 

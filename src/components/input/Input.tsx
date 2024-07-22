@@ -51,7 +51,7 @@ const Input = memo(
             disabled={disabled}
             defaultValue={defaultValue}
             value={value}
-            onChange={(e) => onChange && onChange(e)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e)}
             onBlur={(e) => onBlur && onBlur(e)}
           />
           <FormHelperText className={error ? 'error' : 'info'}>{helperText}</FormHelperText>

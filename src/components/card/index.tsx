@@ -4,7 +4,7 @@ import { Container, CustomCard, DefaultCard } from './styles';
 
 interface Props {
   children: ReactNode;
-  background?: string;
+  background: string;
   custom?: boolean;
   pointer?: boolean;
   onClick?: () => void;

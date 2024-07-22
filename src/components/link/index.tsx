@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Container } from './styles';
 
 interface Props {
-  path?: string;
+  path: string;
   underlink?: ReactNode | string | number;
   children?: ReactNode;
   onClick?: (e) => void;
