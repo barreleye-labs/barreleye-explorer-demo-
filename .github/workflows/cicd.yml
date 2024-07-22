@@ -19,12 +19,15 @@ jobs:
       - uses: actions/cache@v3
         id: npm-cache
         with:
-          path: ~/.npm
+          path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - if: steps.npm-cache.outputs.cache-hit == 'true'
-        run: echo 'npm cache hit!'
+        run: |
+          echo 'npm cache hit!'
+          run: npm ci
       - if: steps.npm-cache.outputs.cache-hit != 'true'
         run: echo 'npm cache missed!'
+        
       - run: npm ci
       - name: Start the application
         run: npm run start:prod &
