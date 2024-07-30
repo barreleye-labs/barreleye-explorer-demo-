@@ -101,9 +101,7 @@
    npm run dev
    ```
 
-이제 프로젝트가 성공적으로 실행됩니다. Happy coding! 🚀
-
-
+Now your project should be up and running successfully. Happy coding! 🚀
 
 ## Where is the Core?
 - [Barreleye Core](https://github.com/barreleye-labs/barreleye)
