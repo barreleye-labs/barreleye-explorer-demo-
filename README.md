@@ -33,7 +33,7 @@
    ```
 
 2. **Set Go Version and Run Commands**
-   1. Set Go version to 1.22.0.
+   1. Set Go SDK to 1.22.0.
    2. Run the following commands in the cloned code directory to activate the server.
 
    <br/>
@@ -85,7 +85,7 @@
    ```
 
 2. **Go Version 설정 및 명령어 실행**
-   1. Go 버전을 1.22.0로 설정합니다.
+   1. Go SDK 1.22.0로 구성합니다.
    2. 클론한 코드에서 아래 명령어를 순차적으로 입력해 서버를 활성화시킵니다.
 
 
