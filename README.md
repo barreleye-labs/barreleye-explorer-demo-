@@ -33,28 +33,40 @@
    ```
 
 2. **Set Go Version and Run Commands**
-   - Set Go version to 1.22.0.
-   - Run the following commands in the cloned code directory to activate the server.
+   1. Set Go version to 1.22.0.
+   2. Run the following commands in the cloned code directory to activate the server.
+
+   <br/>
+
    
-   ```bash
+    ```bash
    make barreleye
+    ```
 
+    ```bash
    make nayoung
+    ```
 
+
+    ```bash
    make youngmin
-   ```
+    ```
 
 ### Frontend Configuration
 
-1. **Navigate to Barreleyescan Code**
-   - Move to the project directory.
+1. **Navigate to Barreleyescan Code**: Move to the project directory.
 
 2. **Set up Node.js and npm**
-   - Set Node.js version to LTS.
-   - Install the necessary packages.
-   ```bash
-   npm i 
-   ```
+   1. Set Node.js version to LTS.
+   2. Install the necessary packages.
+
+
+   <br/>
+
+   
+    ```bash
+   npm i
+    ```
 
 3. **Run Development Server**
    ```bash
@@ -73,28 +85,41 @@
    ```
 
 2. **Go Version 설정 및 명령어 실행**
-   - Go 버전을 1.22.0로 설정합니다.
-   - 클론한 코드에서 아래 명령어를 순차적으로 입력해 서버를 활성화시킵니다.
+   1. Go 버전을 1.22.0로 설정합니다.
+   2. 클론한 코드에서 아래 명령어를 순차적으로 입력해 서버를 활성화시킵니다.
 
-   ```bash
+
+   <br/>
+
+   
+    ```bash
    make barreleye
+    ```
 
+    ```bash
    make nayoung
+    ```
 
+
+    ```bash
    make youngmin
-   ```
+    ```
 
 ### 프론트엔드 설정
 
-1. **Barreleyescan 코드로 이동**
-   - 프로젝트 디렉토리로 이동합니다.
+1. **Barreleyescan 코드로 이동**: 프로젝트 디렉토리로 이동합니다.
 
 2. **Node.js 및 npm 설정**
-   - Node.js 버전을 LTS로 설정합니다.
-   - 필요한 패키지를 설치합니다.
-   ```bash
-   npm i 
-   ```
+   1. Node.js 버전을 LTS로 설정합니다.
+   2. 필요한 패키지를 설치합니다.
+
+
+   <br/>
+
+   
+    ```bash
+   npm i
+    ```
 
 3. **개발 서버 실행**
    ```bash
