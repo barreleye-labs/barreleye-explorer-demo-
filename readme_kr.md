@@ -32,11 +32,11 @@
   </ol>
 </details>
 
-
+[View in English](https://github.com/barreleye-labs/barreleyescan/blob/develop/README.md)
 
 ## 프로젝트 시작 가이드
 
-[View in English](https://github.com/barreleye-labs/barreleyescan/blob/develop/README.md)
+
 
 
 ### 서버 설정
