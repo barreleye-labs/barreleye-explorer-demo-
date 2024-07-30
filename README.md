@@ -76,58 +76,6 @@
 
 <br/>
 
-## 프로젝트 시작 가이드
-
-### 서버 설정
-
-1. **코드 클론**: [barreleye core](https://github.com/barreleye-labs/barreleye) 에 가서 코드를 클론합니다.
-     
-   ```bash
-   git clone https://github.com/barreleye-labs/barreleye.git
-   ```
-
-2. **Go Version 설정 및 명령어 실행**
-   1. Go SDK 1.22.0로 구성합니다.
-   2. 클론한 코드에서 아래 명령어를 순차적으로 입력해 서버를 활성화시킵니다.
-
-
-   <br/>
-
-   
-    ```bash
-   make barreleye
-    ```
-
-    ```bash
-   make nayoung
-    ```
-
-
-    ```bash
-   make youngmin
-    ```
-
-### 프론트엔드 설정
-
-1. **Barreleyescan 코드로 이동**: 프로젝트 디렉토리로 이동합니다.
-
-2. **Node.js 및 npm 설정**
-   1. Node.js 버전을 LTS로 설정합니다.
-   2. 필요한 패키지를 설치합니다.
-
-
-   <br/>
-
-   
-    ```bash
-   npm i
-    ```
-
-3. **개발 서버 실행**
-   ```bash
-   npm run dev
-   ```
-
 Now your project should be up and running successfully. Happy coding! 🚀
 
 ## Where is the Core?
