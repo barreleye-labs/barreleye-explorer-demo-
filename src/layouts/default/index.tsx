@@ -38,13 +38,14 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 const DefaultLayout = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
-  const commonPrivateKey = commonPrivateKeyStore((state) => state.privateKey);
-  const removeCommonPrivateKey = commonPrivateKeyStore((state) => state.remove);
-  const setCommonPrivateKey = commonPrivateKeyStore((state) => state.set);
-  const setCommonAddress = commonPrivateKeyStore((state) => state.setAddress);
-  const commonAddress = commonPrivateKeyStore((state) => state.address);
+  const {
+    privateKey: commonPrivateKey,
+    remove: removeCommonPrivateKey,
+    set: setCommonPrivateKey,
+    setAddress: setCommonAddress,
+    address: commonAddress
+  } = commonPrivateKeyStore();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [getSession, _, removeSession] = useSessionStorage<string>('key');
   const privateKey = getSession();
   const { data } = AccountService().GetOneByIdQuery(commonAddress && commonAddress, {
@@ -52,7 +53,6 @@ const DefaultLayout = () => {
   });
   const modalHandle = useCallback(() => {
     setOpen((open) => !open);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const onConfirm = () => {
@@ -67,12 +67,10 @@ const DefaultLayout = () => {
     if (privateKey) {
       setCommonPrivateKey(privateKey.toString());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchAddress().then(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commonPrivateKey]);
 
   const fetchAddress = async () => {
@@ -83,7 +81,7 @@ const DefaultLayout = () => {
     }
   };
 
-  const ellipsisAddress = useMemo(() => commonAddress && Char.ellipsis(commonAddress), [commonAddress]);
+  const ellipsisMiddleAddress = useMemo(() => commonAddress && Char.ellipsisMiddle(commonAddress), [commonAddress]);
   return (
     <>
       <Container>
@@ -124,7 +122,7 @@ const DefaultLayout = () => {
                     size="lg"
                     onClick={() => navigate(`/account/${Char.add0x(commonAddress)}`)}
                   >
-                    {Char.add0x(ellipsisAddress)}
+                    {Char.add0x(ellipsisMiddleAddress)}
                   </Button>
                 </HtmlTooltip>
               </>

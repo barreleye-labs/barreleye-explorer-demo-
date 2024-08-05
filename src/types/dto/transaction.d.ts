@@ -33,6 +33,7 @@ export interface TransactionRequest {
   signerY?: string;
   signatureR?: string;
   signatureS?: string;
+  [key: string]: any;
 }
 
 export interface FaucetRequest {

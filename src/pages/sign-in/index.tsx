@@ -10,7 +10,7 @@ import { commonPrivateKeyStore } from '@src/stores';
 const SignIn = () => {
   const navigate = useNavigate();
   const [privateKey, setPrivateKey] = useState('');
-  const setCommonPrivateKey = commonPrivateKeyStore((state) => state.set);
+  const { set: setCommonPrivateKey } = commonPrivateKeyStore();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSession] = useSessionStorage<string>('key');

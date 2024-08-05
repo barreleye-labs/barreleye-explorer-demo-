@@ -106,7 +106,7 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
               {!isSimpleData && (
                 <TableCell align="left">
                   <HtmlTooltip title={<em>{Char.add0x(row.hash)}</em>}>
-                    <span>{Char.add0x(Char.ellipsis(row.hash))}</span>
+                    <span>{Char.add0x(Char.ellipsisMiddle(row.hash))}</span>
                   </HtmlTooltip>
                 </TableCell>
               )}
@@ -114,7 +114,7 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
               {!isSimpleData && (
                 <TableCell align="left">
                   <HtmlTooltip title={<em>{Char.add0x(row.prevBlockHash)}</em>}>
-                    <span>{Char.add0x(Char.ellipsis(row.prevBlockHash))}</span>
+                    <span>{Char.add0x(Char.ellipsisMiddle(row.prevBlockHash))}</span>
                   </HtmlTooltip>
                 </TableCell>
               )}

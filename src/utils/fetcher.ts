@@ -1,5 +1,15 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
-const fetcher = (url: string) => axios.get(url).then(({ data }) => data.data);
+type Fetcher = <T>(url: string) => Promise<T>;
+
+const fetcher: Fetcher = async (url) => {
+  try {
+    const response: AxiosResponse<{ data: any }> = await axios.get(url);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching data from ${url}`, error);
+    throw error;
+  }
+};
 
 export { fetcher };

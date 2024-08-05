@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Container } from './styles';
 
 interface Props {
-  path: string;
+  path?: string;
   underlink?: ReactNode | string | number;
   children?: ReactNode;
   onClick?: (e) => void;
@@ -13,7 +13,7 @@ interface Props {
 const LinkUnderline = ({ path, underlink, children, onClick }: Props) => {
   return (
     <Container>
-      <Link to={path} onClick={onClick}>
+      <Link to={path || ''} onClick={onClick}>
         {underlink}
         {children}
       </Link>

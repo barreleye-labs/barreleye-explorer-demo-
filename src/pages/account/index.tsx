@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import { debounce } from 'lodash-es';
-import { useSnackbar } from 'notistack';
 
 import AccountService from '@services/account';
+
+import useToast from '@hooks/useToast.ts';
 
 import Card from '@components/card';
 import Detail from '@components/detail';
@@ -21,7 +22,7 @@ const defaultAccount = () => {
 const Account = () => {
   const navigate = useNavigate();
   const { address } = useParams();
-  const { enqueueSnackbar } = useSnackbar();
+  const showToast = useToast();
   const [account, setAccount] = useState<{ nonce: string; balance: string }>(defaultAccount());
 
   useEffect(() => {
@@ -41,14 +42,6 @@ const Account = () => {
     setAccount(data.account);
   }
 
-  const showToast = useCallback(({ variant, message }: { variant: 'success' | 'error'; message: string }) => {
-    enqueueSnackbar(message, {
-      variant,
-      anchorOrigin: { vertical: 'top', horizontal: 'right' }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onValidCheck = debounce(async (address: string) => {
     Char.isAddress(address)
       ? navigate(`/account/${Char.add0x(address)}`)
@@ -64,7 +57,7 @@ const Account = () => {
     <Card>
       <SearchInput onChange={onChange} />
 
-      <Detail icon={<FilterNoneIcon />} title={address ? Char.ellipsis(address) : 'No Account Info'}>
+      <Detail icon={<FilterNoneIcon />} title={address ? Char.ellipsisMiddle(address) : 'No Account Info'}>
         {!address ? (
           'Search Account!'
         ) : (

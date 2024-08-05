@@ -3,20 +3,20 @@ import { BlockResponse, BlocksResponse } from '@type/dto/block';
 import useApi from '@hooks/useApi';
 
 const BlocksService = () => {
-  const PATH: string = '/api';
+  const PATH: string = '/api/blocks';
 
   function GetAll({ page, size }: Record<string, number>) {
-    return useApi<BlocksResponse>(`${PATH}/blocks?page=${page}&size=${size}`, {
-      refreshInterval: true
+    return useApi<BlocksResponse>(`${PATH}?page=${page}&size=${size}`, {
+      refreshInterval: 1000
     });
   }
 
   function GetOneById(id: string) {
-    return useApi<BlockResponse>(`${PATH}/blocks/${id}`, {});
+    return useApi<BlockResponse>(`${PATH}/${id}`, {});
   }
 
   function GetLast() {
-    return useApi<BlockResponse>(`${PATH}/last-block`, { refreshInterval: true });
+    return useApi<BlockResponse>(`/api/last-block`, { refreshInterval: 1000 });
   }
 
   return {

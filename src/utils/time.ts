@@ -1,37 +1,43 @@
 import dayjs from 'dayjs';
 
-function elapsedTime(date: number): string {
-  const start: Date = new Date(date);
-  const end: Date = new Date();
+interface TimeUnit {
+  name: string;
+  seconds: number;
+}
 
-  const diff = (Number(end) - Number(start)) / 1000;
+const TIME_UNITS: TimeUnit[] = [
+  { name: 'year', seconds: 60 * 60 * 24 * 365 },
+  { name: 'month', seconds: 60 * 60 * 24 * 30 },
+  { name: 'day', seconds: 60 * 60 * 24 },
+  { name: 'hour', seconds: 60 * 60 },
+  { name: 'minute', seconds: 60 },
+  { name: 'second', seconds: 1 }
+];
 
-  const times = [
-    { name: 'year', milliSeconds: 60 * 60 * 24 * 365 },
-    { name: 'month', milliSeconds: 60 * 60 * 24 * 30 },
-    { name: 'day', milliSeconds: 60 * 60 * 24 },
-    { name: 'hours', milliSeconds: 60 * 60 },
-    { name: 'mins', milliSeconds: 60 },
-    { name: 'secs', milliSeconds: 1 }
-  ];
-
-  for (const value of times) {
-    const betweenTime = Math.floor(diff / value.milliSeconds);
-
+const calculateElapsedTime = (diffInSeconds: number): string => {
+  for (const unit of TIME_UNITS) {
+    const betweenTime = Math.floor(diffInSeconds / unit.seconds);
     if (betweenTime > 0) {
-      return `${betweenTime} ${value.name} ago`;
+      return `${betweenTime} ${unit.name}${betweenTime > 1 ? 's' : ''} ago`;
     }
   }
   return 'now';
-}
+};
 
-function formatUnixNano(timestamp: number): number {
+const elapsedTime = (date: number): string => {
+  const start = new Date(date);
+  const end = new Date();
+  const diffInSeconds = (end.getTime() - start.getTime()) / 1000;
+  return calculateElapsedTime(diffInSeconds);
+};
+
+const formatUnixNano = (timestamp: number): number => {
   return timestamp / 1000000;
-}
+};
 
-function formatUtc(timestamp: number) {
-  return dayjs(timestamp).utc().format('MMM D,YYYY HH:mm:ss');
-}
+const formatUtc = (timestamp: number): string => {
+  return dayjs(timestamp).utc().format('MMM D, YYYY HH:mm:ss');
+};
 
 export const Time = {
   elapsedTime,

@@ -37,7 +37,7 @@ function Transaction() {
       <Detail
         icon={<FilterNoneIcon />}
         title={location.pathname.split('/')[1].toUpperCase()}
-        subheader={Char.ellipsis(hash as string)}
+        subheader={Char.ellipsisMiddle(hash as string)}
       >
         {!data ? (
           <>

@@ -27,13 +27,8 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
 
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      // mobile
-      setMobile(true);
-    } else {
-      // desktop
-      setMobile(false);
-    }
+    setMobile(isMobile);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigator.userAgent]);
 
@@ -46,13 +41,9 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
   };
 
   const TableCellAccount = useCallback((value: string) => {
-    return (
-      <LinkUnderline
-        path={`/account/${Char.add0x(value)}`}
-        underlink={!isSimpleData ? Char.add0x(Char.ellipsis(value)) : Char.add0x(Char.ellipsis8(value))}
-      ></LinkUnderline>
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const underlink = Char.add0x(isSimpleData ? Char.ellipsisEnd(value) : Char.add0x(Char.ellipsisMiddle(value)));
+
+    return <LinkUnderline path={`/account/${Char.add0x(value)}`} underlink={underlink} />;
   }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +82,7 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
                   <LinkUnderline
                     path={`/transaction/${Char.add0x(row.hash)}`}
                     underlink={
-                      !isSimpleData ? Char.add0x(Char.ellipsis(row.hash)) : Char.add0x(Char.ellipsis8(row.hash))
+                      !isSimpleData ? Char.add0x(Char.ellipsisMiddle(row.hash)) : Char.add0x(Char.ellipsisEnd(row.hash))
                     }
                   ></LinkUnderline>
                 </TableCell>

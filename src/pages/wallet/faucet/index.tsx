@@ -5,10 +5,11 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { LoadingButton } from '@mui/lab';
 import { CardContent, Typography, debounce } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
-import { useSnackbar } from 'notistack';
 
 import AccountService from '@services/account.ts';
 import FaucetService from '@services/faucet';
+
+import useToast from '@hooks/useToast.ts';
 
 import Card from '@components/card';
 import { Input } from '@components/input';
@@ -19,43 +20,40 @@ import { Char } from '@utils';
 import { BTN_TYPE, buttonHandlerStore } from '@src/stores/index.ts';
 
 const Faucet = () => {
-  const loading = buttonHandlerStore((state) => state.loadingFaucet);
-  const setLoading = buttonHandlerStore((state) => state.setLoading);
-
+  const { loadingFaucet, setLoading } = buttonHandlerStore();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const showToast = useToast();
 
   const [accountAddress, setAccountAddress] = useState<string>('');
   const [balance, setBalance] = useState<string>('0');
-  const [isBalanceEnoughError, setIsBalanceEnoughError] = useState<boolean>(false);
+  const [isEnoughBalanceError, setIsBalanceEnoughError] = useState<boolean>(false);
 
-  const showToast = useCallback(({ variant, message }: { variant: 'success' | 'error'; message: string }) => {
-    enqueueSnackbar(message, {
-      variant,
-      anchorOrigin: { vertical: 'top', horizontal: 'right' }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const validateBalance = (balance: string): boolean => {
+    return Number(Char.hexToDecimal(balance)) >= 10;
+  };
 
-  const fetchAccount = async (address = accountAddress) => {
+  const getBalance = async (address = accountAddress) => {
     setIsBalanceEnoughError(false);
 
     const { data, error } = await AccountService().GetOneById(Char.remove0x(address));
 
     if (error) {
-      return setBalance('0');
+      return '0';
     }
 
-    const balance: string = data.account.balance;
-    setBalance(Char.hexToBalance(balance));
-
-    if (Number(Char.hexToDecimal(balance)) >= 10) setIsBalanceEnoughError(true);
+    return data.account.balance;
   };
 
-  const onValidCheck = debounce(async (e) => {
-    if (e.target.value) {
-      setAccountAddress(e.target.value);
-      fetchAccount(e.target.value);
+  const onChange = debounce(async (e) => {
+    const address = e.target.value;
+    if (address) {
+      setAccountAddress(address);
+      const balance = await getBalance(address);
+      setBalance(Char.hexToBalance(balance));
+
+      if (validateBalance(balance)) {
+        setIsBalanceEnoughError(true);
+      }
     }
   }, 500);
 
@@ -73,17 +71,22 @@ const Faucet = () => {
 
     setLoading(BTN_TYPE.FAUCET);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setLoading(BTN_TYPE.FAUCET);
 
       showToast({ variant: 'success', message: 'Your Barrel Faucet request accepted.' });
 
-      fetchAccount();
+      const balance = await getBalance(accountAddress);
+      setBalance(Char.hexToBalance(balance));
+
+      if (validateBalance(balance)) {
+        setIsBalanceEnoughError(true);
+      }
     }, 13000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddress]);
 
-  const disabled = useMemo(() => !accountAddress || isBalanceEnoughError, [accountAddress, isBalanceEnoughError]);
+  const disabled = useMemo(() => !accountAddress || isEnoughBalanceError, [accountAddress, isEnoughBalanceError]);
 
   return (
     <>
@@ -102,12 +105,12 @@ const Faucet = () => {
               label="Account Address"
               placeholder="Please put your wallet address here"
               name="accountAddress"
-              disabled={loading}
-              onChange={onValidCheck}
+              disabled={loadingFaucet}
+              onChange={onChange}
             />
             <Input
-              error={isBalanceEnoughError}
-              helperText={isBalanceEnoughError && 'The account already has sufficient balance of more than 10 Barrel.'}
+              error={isEnoughBalanceError}
+              helperText={isEnoughBalanceError && 'The account already has sufficient balance of more than 10 Barrel.'}
               label="Barrel Balance"
               name="balance"
               placeholder="0.000000"
@@ -118,9 +121,15 @@ const Faucet = () => {
           </>
 
           <CardActions>
-            <span className="info">{loading && 'Please wait up to 13 seconds'}</span>
+            <span className="info">{loadingFaucet && 'Please wait up to 13 seconds'}</span>
 
-            <LoadingButton loading={loading} disabled={disabled} className="button" size="large" onClick={onSubmit}>
+            <LoadingButton
+              loading={loadingFaucet}
+              disabled={disabled}
+              className="button"
+              size="large"
+              onClick={onSubmit}
+            >
               Run Faucet
             </LoadingButton>
           </CardActions>

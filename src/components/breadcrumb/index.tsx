@@ -20,7 +20,7 @@ const Breadcrumb = () => {
     <Breadcrumbs separator="/" aria-label="breadcrumb">
       {locationArr?.map((path, index) => {
         if (index > 0) {
-          return <div key={index}>{path.length > 15 ? Char.ellipsis(path) : path.toUpperCase()}</div>;
+          return <div key={index}>{path.length > 15 ? Char.ellipsisMiddle(path) : path.toUpperCase()}</div>;
         } else {
           return <HomeIcon key={index} sx={{ mr: 0.5 }} fontSize="inherit" />;
         }

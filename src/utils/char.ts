@@ -3,90 +3,63 @@ function hexToBalance(hex: string): string {
 }
 
 function bytesToHex(bytes: number[]): string {
-  const hex = [];
-  for (let i = 0; i < bytes.length; i++) {
-    const current = bytes[i] < 0 ? bytes[i] + 256 : bytes[i];
-    hex.push((current >>> 4).toString(16));
-    hex.push((current & 0xf).toString(16));
-  }
-  return hex.join('');
+  return bytes.map((byte) => (byte < 0 ? byte + 256 : byte).toString(16).padStart(2, '0')).join('');
 }
 
 function hexToUint8Array(hex: string): Uint8Array {
-  const bytes = new Uint8Array(Math.ceil(hex.length / 2));
-  for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  const length = Math.ceil(hex.length / 2);
+  const bytes = new Uint8Array(length);
+  for (let i = 0; i < length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
   return bytes;
 }
 
 function uint8ArrayToHex(bytes: Uint8Array): string {
-  let hex = '';
-  for (let i = 0; i < bytes.length; i++) {
-    if (bytes[i] < 16) hex += '0';
-    hex += bytes[i].toString(16);
-  }
-  return hex;
+  return Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 function numberToHex(value: number): string {
-  let hex: string = value.toString(16);
-  if (hex.length % 2 == 1) {
-    hex = '0'.concat(hex);
-  }
-  return hex;
+  return value.toString(16).padStart(2, '0');
 }
 
-function remove0x(hex: string) {
-  return hex.replace('0x', '');
+function remove0x(hex: string): string {
+  return hex.startsWith('0x') ? hex.slice(2) : hex;
 }
 
-function add0x(hex: string) {
-  return `0x${hex}`;
+function add0x(hex: string): string {
+  return hex.startsWith('0x') ? hex : `0x${hex}`;
 }
 
-function hexToDecimal(hex: string) {
+function hexToDecimal(hex: string): string {
   return parseInt(hex, 16).toString();
 }
 
-function isAddress(address: string) {
-  if (address.indexOf('0x') === 0) {
-    address = address.replace('0x', '');
-  }
-
-  if (address.length !== 40) {
-    return false;
-  }
-
-  const regexp: RegExp = /^[0-9a-fA-F]+$/;
-
-  if (regexp.test(address)) {
-    return true;
-  }
-  return false;
+function isAddress(address: string): boolean {
+  const cleanedAddress = remove0x(address);
+  return /^[0-9a-fA-F]{40}$/.test(cleanedAddress);
 }
 
-function ellipsis(value: string) {
-  const a = value.substring(0, 6);
-  const b = value.slice(-6, value.length);
-
-  return `${a}...${b}`;
+function ellipsisMiddle(value: string): string {
+  return `${value.substring(0, 6)}...${value.slice(-6)}`;
 }
 
-function ellipsis8(value: string) {
-  const a = value.substring(0, 8);
-
-  return `${a}...`;
+function ellipsisEnd(value: string): string {
+  return `${value.substring(0, 8)}...`;
 }
 
+// 모든 유틸리티 함수들을 Char 객체로 내보내어 모듈화합니다.
 export const Char = {
   bytesToHex,
   hexToBalance,
   hexToUint8Array,
   uint8ArrayToHex,
   numberToHex,
-
   isAddress,
-  ellipsis,
-  ellipsis8,
+  ellipsisMiddle,
+  ellipsisEnd,
   add0x,
   remove0x,
   hexToDecimal

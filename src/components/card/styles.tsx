@@ -217,7 +217,12 @@ export const CardContent = styles(Content)`
     
   }
 `;
-export const CustomCard = styles.div`
+
+interface CustomCardProps {
+  background?: string;
+}
+
+export const CustomCard = styles.div<CustomCardProps>`
 .MuiCard-root{
   cursor: pointer;
   background-color: ${(props) => props.background};

@@ -4,7 +4,7 @@ import { Container, CustomCard, DefaultCard } from './styles';
 
 interface Props {
   children: ReactNode;
-  background: string;
+  background?: string;
   custom?: boolean;
   pointer?: boolean;
   onClick?: () => void;
@@ -12,7 +12,7 @@ interface Props {
 const Card = ({ children, custom, background, onClick }: Props) => {
   return custom ? (
     <CustomCard background={background} onClick={onClick}>
-      <Container> {children}</Container>
+      <Container>{children}</Container>
     </CustomCard>
   ) : (
     <DefaultCard>

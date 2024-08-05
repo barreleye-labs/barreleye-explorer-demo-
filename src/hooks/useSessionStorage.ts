@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { Char, Crypto } from '@utils';
 
-type UseSessionStorage<T> = [() => T | string | undefined, (value: T) => void, () => void, string | undefined];
+type UseSessionStorage<T> = [() => T | string | undefined, (value: string) => void, () => void, string | undefined];
 
 function useSessionStorage<T>(key: string): UseSessionStorage<T> {
   const [address, setAddress] = useState<string | undefined>();
@@ -19,7 +19,7 @@ function useSessionStorage<T>(key: string): UseSessionStorage<T> {
     }
   };
 
-  const setSession = (value: T): void => {
+  const setSession = (value: string): void => {
     try {
       window.sessionStorage.setItem(key, value);
     } catch (error) {
@@ -38,7 +38,7 @@ function useSessionStorage<T>(key: string): UseSessionStorage<T> {
   const sessionToAddress = async () => {
     const value = await Crypto.privateKeyToAddress(getSession() as string);
 
-    setAddress(Char.ellipsis(value as string));
+    setAddress(Char.ellipsisMiddle(value as string));
   };
 
   useEffect(() => {

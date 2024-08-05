@@ -1,11 +1,19 @@
 declare namespace API {
-  interface Response<T = never> {
+  interface SuccessResponse<T> {
     data: T;
     statusCode: number;
-    error?: Error;
+    error?: never;
   }
 
-  interface Error {
+  interface ErrorResponse {
+    data: null;
+    statusCode: number;
+    error: APIError;
+  }
+
+  type Response<T> = SuccessResponse<T> | ErrorResponse;
+
+  interface APIError {
     message: string;
   }
 }

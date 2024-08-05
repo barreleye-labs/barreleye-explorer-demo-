@@ -9,7 +9,7 @@ const useInput = <T>(initialData: T): ReturnTypes<T> => {
     (e: ChangeEvent<HTMLInputElement>) => {
       const { value, name } = e.target;
 
-      typeof values === 'object' ? setValues({ ...values, [name]: value }) : setValues(value);
+      typeof values === 'object' ? setValues({ ...values, [name]: value }) : setValues(value as T);
     },
     [values]
   );

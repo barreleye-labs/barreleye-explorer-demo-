@@ -7,15 +7,15 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { CardContent, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
-import { useSnackbar } from 'notistack';
 
 import AccountService from '@services/account';
 import TransactionsService from '@services/transactions';
 
-import { Signature } from '@type/dto/signature';
 import { TransactionRequest } from '@type/dto/transaction';
 
 import useInput from '@hooks/useInput';
+import useSignature from '@hooks/useSignature.ts';
+import useToast from '@hooks/useToast.ts';
 
 import Card from '@components/card';
 import { PrivateForm } from '@components/form';
@@ -37,17 +37,19 @@ const txDefaultData = (): TransactionRequest => {
 };
 
 const Transfer = () => {
-  const loading = buttonHandlerStore((state) => state.loadingTransfer);
-  const setLoading = buttonHandlerStore((state) => state.setLoading);
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-  const commonAddress = commonPrivateKeyStore((state) => state.address);
-  const commonPrivateKey = commonPrivateKeyStore((state) => state.privateKey);
+  const showToast = useToast();
+  const { loadingTransfer, setLoading } = buttonHandlerStore();
+
+  const { address: commonAddress, privateKey: commonPrivateKey } = commonPrivateKeyStore();
 
   const [tx, onChange, setTx] = useInput<TransactionRequest>(txDefaultData());
   const [balance, setBalance] = useState<string>();
   const [step, setStep] = useState(commonPrivateKey ? 2 : 1);
   const [privateKey, onChangePrivateKey, setPrivateKey] = useInput('');
+
+  const getSigner = useCallback(() => Crypto.generatePublicKey(privateKey), [privateKey]);
+  const getSignature = useSignature(privateKey, tx);
 
   const initData = useCallback(() => {
     setTx(txDefaultData());
@@ -57,61 +59,32 @@ const Transfer = () => {
 
   useEffect(() => {
     if (commonPrivateKey) {
-      setTx({ ...tx, from: commonAddress });
       setPrivateKey(commonPrivateKey);
-      fetchAccount().then(() => {});
+
+      const fetchData = async () => {
+        const { nonce, balance } = await fetchAccount(commonAddress);
+        setTx((tx) => ({ ...tx, nonce, from: commonAddress }));
+        setBalance(() => Char.hexToBalance(balance));
+      };
+
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const showToast = useCallback(({ variant, message }: { variant: 'success' | 'error'; message: string }) => {
-    enqueueSnackbar(message, {
-      variant,
-      anchorOrigin: { vertical: 'top', horizontal: 'right' }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  async function fetchAccount(address = commonAddress): Promise<{ nonce: string; balance: string; address: string }> {
+    const { data, error } = await AccountService().GetOneById(address);
 
-  const getSigner = useCallback(() => Crypto.generatePublicKey(privateKey), [privateKey]);
+    if (error) return { balance: '0', nonce: '0', address: '' };
 
-  const getSignature = useCallback(
-    (nonce: string): Signature => {
-      const { from, to, value, data } = tx;
-
-      const sig: TransactionRequest = {
-        nonce,
-        from: Char.remove0x(from),
-        to: Char.remove0x(to),
-        value: Char.numberToHex(Number(value)),
-        data
-      };
-
-      const txUintArray = new Uint8Array(
-        Object.keys(sig).reduce((acc: number[], key: string) => acc.concat(...Char.hexToUint8Array(sig[key])), [])
-      );
-
-      const message = Char.uint8ArrayToHex(txUintArray);
-      return Crypto.signMessage(message, privateKey);
-    },
-    [privateKey, tx]
-  );
-
-  async function fetchAccount(address = commonAddress) {
-    const { data, error: accountError } = await AccountService().GetOneById(address);
-
-    if (accountError) return setBalance(0);
-
-    const { nonce, balance } = data.account;
-
-    setTx((tx) => ({ ...tx, nonce }));
-    setBalance(Char.hexToBalance(balance));
+    return data.account;
   }
 
   const sendTransaction = useCallback(async () => {
     const { r, s } = getSignature(tx.nonce);
     const { x, y } = getSigner();
 
-    const { error: transactionsError } = await TransactionsService().Send({
+    const { error } = await TransactionsService().Send({
       ...tx,
       value: Char.add0x(Char.numberToHex(Number(tx.value))),
       to: Char.remove0x(tx.to),
@@ -121,14 +94,22 @@ const Transfer = () => {
       signerY: y
     });
 
-    if (transactionsError)
+    if (error)
       return showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
 
     setLoading(BTN_TYPE.TRANSFER);
-    setTimeout(() => {
+    setTimeout(async () => {
       showToast({ variant: 'success', message: 'Transaction transfer was successful!' });
-      fetchAccount();
-      !commonPrivateKey && initData();
+
+      const { nonce, balance, address } = await fetchAccount(tx.from);
+
+      if (commonPrivateKey) {
+        setTx((tx) => ({ ...tx, nonce, from: address }));
+        setBalance(Char.hexToBalance(balance));
+      } else {
+        initData();
+      }
+
       setLoading(BTN_TYPE.TRANSFER);
     }, 13000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,14 +136,18 @@ const Transfer = () => {
   const onSubmit = useCallback(async () => {
     if (step === 1) {
       const from = await Crypto.privateKeyToAddress(privateKey);
+      const { nonce, balance } = await fetchAccount(from);
 
-      setTx({ ...tx, from: from as string });
-      await fetchAccount(from);
+      setTx((tx) => ({ ...tx, nonce, from }));
+      setBalance(Char.hexToBalance(balance));
+      setStep(2);
 
-      return setStep(2);
+      return;
     }
 
-    if (isValidAddress()) await sendTransaction();
+    if (step === 2 && isValidAddress()) {
+      await sendTransaction();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, tx, step]);
 
@@ -174,8 +159,8 @@ const Transfer = () => {
           title="Enter an acceptable private key."
           sub="Please enter the private key to sign the transaction."
           defaultValue={privateKey}
-          disabled={loading}
-          loading={loading}
+          disabled={loadingTransfer}
+          loading={loadingTransfer}
           onChange={(e) => onChangePrivateKey(e)}
           onClick={onSubmit}
         />
@@ -184,7 +169,7 @@ const Transfer = () => {
           <Card>
             <CardContent>
               <>
-                {step === 2 && (
+                {step === 2 && !commonPrivateKey && (
                   <Button className="return" onClick={() => setStep(1)}>
                     <ArrowBackIosNewIcon />
                     Back
@@ -217,9 +202,15 @@ const Transfer = () => {
               </>
 
               <CardActions>
-                <span className="info">{loading && 'Please wait up to 13 seconds'}</span>
+                <span className="info">{loadingTransfer && 'Please wait up to 13 seconds'}</span>
 
-                <LoadingButton loading={loading} disabled={disabled} className="button" size="large" onClick={onSubmit}>
+                <LoadingButton
+                  loading={loadingTransfer}
+                  disabled={disabled}
+                  className="button"
+                  size="large"
+                  onClick={onSubmit}
+                >
                   Send Transaction
                 </LoadingButton>
               </CardActions>

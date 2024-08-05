@@ -19,13 +19,13 @@ const Create = () => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    async function getAddress() {
-      const address = await Crypto.privateKeyToAddress(privateKey as string);
-      setAddress(Char.add0x(address as string));
-    }
-
     getAddress();
   }, [privateKey]);
+
+  async function getAddress() {
+    const address = await Crypto.privateKeyToAddress(privateKey as string);
+    setAddress(Char.add0x(address as string));
+  }
 
   return (
     <>
