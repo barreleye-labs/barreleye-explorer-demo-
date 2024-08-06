@@ -60,7 +60,7 @@ const DefaultLayout = () => {
     removeCommonPrivateKey();
 
     modalHandle();
-    navigate('/dashboard');
+    navigate('/');
   };
 
   useEffect(() => {

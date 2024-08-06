@@ -39,6 +39,7 @@ const txDefaultData = (): TransactionRequest => {
 const Transfer = () => {
   const navigate = useNavigate();
   const showToast = useToast();
+
   const { loadingTransfer, setLoading } = buttonHandlerStore();
 
   const { address: commonAddress, privateKey: commonPrivateKey } = commonPrivateKeyStore();
@@ -116,21 +117,27 @@ const Transfer = () => {
   }, [tx]);
 
   const isValidAddress = (): boolean => {
-    let isValid = true;
-
     if (tx.from === Char.remove0x(tx.to)) {
-      isValid = false;
       showToast({ variant: 'error', message: 'Cannot send to the same address.' });
-      return isValid;
+      return false;
     }
 
     if (!Char.isAddress(tx.to)) {
       showToast({ variant: 'error', message: 'Check your address format' });
-      isValid = false;
-      return isValid;
+      return false;
     }
 
-    return isValid;
+    if (balance === '0') {
+      showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
+      return false;
+    }
+
+    if (parseFloat(balance!.replace(/,/g, '')) < Number(tx.value)) {
+      showToast({ variant: 'error', message: 'Check your balance' });
+      return false;
+    }
+
+    return true;
   };
 
   const onSubmit = useCallback(async () => {
@@ -148,7 +155,6 @@ const Transfer = () => {
     if (step === 2 && isValidAddress()) {
       await sendTransaction();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey, tx, step]);
 
   const disabled = useMemo(() => (step === 1 ? !privateKey : !tx.to || !tx.value), [tx, step, privateKey]);

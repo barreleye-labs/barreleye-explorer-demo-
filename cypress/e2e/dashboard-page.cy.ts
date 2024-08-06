@@ -3,7 +3,7 @@ const { BLOCKS_ITEMS, TX_ITEMS } = require('../fixtures');
 
 describe('My First Test', () => {
   beforeEach(() => {
-    cy.visit('dashboard');
+    cy.visit('');
   });
 
   it('대시보드에 진입시 Blocks API를 요청 후 7개의 블록 아이템을 조회한다.', () => {

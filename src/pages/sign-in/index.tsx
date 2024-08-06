@@ -18,7 +18,7 @@ const SignIn = () => {
   const onSubmit = useCallback(() => {
     setSession(privateKey as string);
     setCommonPrivateKey(privateKey);
-    navigate('/dashboard');
+    navigate('/');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [privateKey]);
 

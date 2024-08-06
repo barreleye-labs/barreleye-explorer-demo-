@@ -15,21 +15,18 @@ interface Props {
 const MenuItems = memo(({ content, onClick }: Props) => {
   const { pathname } = useLocation();
 
+  const getSelected = (path: string) => {
+    const currentPath = pathname.split('/')[1];
+    return currentPath === path.slice(1) || currentPath === path.slice(1, -1);
+  };
+
   return (
     <div className="gap">
-      {content?.map((item: RouteContent, index: number) => (
-        <Link to={`${item.path}`} key={index}>
+      {content.map((item: RouteContent, index: number) => (
+        <Link to={item.path} key={index} onClick={onClick}>
           <ListItem>
-            <ListItemButton
-              onClick={onClick}
-              className="menu-item"
-              disabled={false}
-              selected={
-                pathname.split('/')[1] === item.path.slice(1) || pathname.split('/')[1] === item.path.slice(1, -1)
-              }
-              variant="plain"
-            >
-              <ListItemDecorator component={item.icon}></ListItemDecorator>
+            <ListItemButton className="menu-item" selected={getSelected(item.path)} variant="plain">
+              <ListItemDecorator>{item.icon && <item.icon />}</ListItemDecorator>
               <ListItemContent>{item.title}</ListItemContent>
             </ListItemButton>
           </ListItem>

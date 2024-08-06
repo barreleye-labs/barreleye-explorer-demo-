@@ -34,6 +34,7 @@ export class AxiosHttpClient {
   }
 
   private handleError(error: AxiosError): API.ErrorResponse {
+    console.log(error);
     if (!error.response) {
       return { data: undefined as never, statusCode: 503, error: { message: 'Service Unavailable' } };
     }
@@ -43,13 +44,13 @@ export class AxiosHttpClient {
     return {
       data: undefined as never,
       statusCode: error.response.status,
-      error: { message: error.message }
+      error: { message: error.response.data.error.message }
     };
   }
 
   private extractErrorResponse(error: AxiosError): API.ErrorResponse | { message: string } {
     if (axios.isAxiosError(error) && error.response) {
-      return error.response.data;
+      return error.response.data.error;
     }
     return { message: 'Unknown error occurred' };
   }

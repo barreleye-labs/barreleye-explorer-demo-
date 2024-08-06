@@ -6,11 +6,11 @@ const BarreleyeLogo = () => {
   const navigate = useNavigate();
   return (
     <Logo>
-      <span onClick={() => navigate('/dashboard')} className="bold">
+      <span onClick={() => navigate('/')} className="bold">
         Barreleye
       </span>
       &nbsp;
-      <span onClick={() => navigate('/dashboard')}>scan</span>
+      <span onClick={() => navigate('/')}>scan</span>
     </Logo>
   );
 };

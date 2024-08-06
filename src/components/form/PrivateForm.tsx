@@ -32,14 +32,16 @@ const PrivateForm = ({ title, loading, sub, defaultValue, disabled, onChange, on
           label="Private Key"
           placeholder="Enter the private key"
           defaultValue={defaultValue}
-          disabled={disabled}
           onChange={(e) => onChange && onChange(e)}
         />
-
         <CardActions>
-          <span className="info">{loading && 'Please wait up to 13 seconds'}</span>
-
-          <LoadingButton loading={loading} disabled={disabled} className="button" size="large" onClick={onClick}>
+          <LoadingButton
+            loading={loading}
+            disabled={defaultValue.length < 1}
+            className="button"
+            size="large"
+            onClick={onClick}
+          >
             Access
           </LoadingButton>
         </CardActions>

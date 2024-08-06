@@ -14,7 +14,7 @@ export const routes: Route[] = [
     content: [
       {
         title: 'Dashboard',
-        path: '/dashboard',
+        path: '/',
         icon: loadable(() => import('@mui/icons-material/GridViewRounded'))
       },
       {

@@ -4,12 +4,11 @@ import loadable from '@loadable/component';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
-    Component: loadable(() => import('@src/App')),
+    Component: loadable(() => import('@src/layouts')),
     errorElement: loadable(() => import('@pages/errorPage')),
     children: [
       {
-        path: '/dashboard',
+        path: '/',
         Component: loadable(() => import('@pages/dashboard'))
       },
       {

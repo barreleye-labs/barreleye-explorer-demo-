@@ -63,10 +63,9 @@ const Faucet = () => {
     });
 
     if (error) {
-      if (error.message === 'faucet time limit')
-        return showToast({ variant: 'error', message: 'faucet can only be used once per hour.\n' });
-
-      return showToast({ variant: 'error', message: 'Invalid address format.\n' });
+      return error.message === 'faucet time limit'
+        ? showToast({ variant: 'error', message: 'faucet can only be used once per hour.\n' })
+        : showToast({ variant: 'error', message: 'Invalid address format.\n' });
     }
 
     setLoading(BTN_TYPE.FAUCET);
