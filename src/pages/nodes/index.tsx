@@ -8,51 +8,38 @@ import { barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConf
 
 import { Stack } from './styles';
 
-const Nodes = () => {
-  const { data: barreleye, mutate: barreleyeMutate } = AccountService().GetOneByIdQuery(barreleyeConfig.ADDRESS, {
-    refreshInterval: true
-  });
-  const { data: youngmin, mutate: youngminMutate } = AccountService().GetOneByIdQuery(youngminConfig.ADDRESS, {
-    refreshInterval: true
-  });
-  const { data: nayoung, mutate: nayoungMutate } = AccountService().GetOneByIdQuery(nayoungConfig.ADDRESS, {
-    refreshInterval: true
-  });
-
+const useNodeData = (address: string) => {
+  const { data, mutate } = AccountService().GetOneByIdQuery(address, { refreshInterval: 60000 });
   useEffect(() => {
-    barreleyeMutate();
-    youngminMutate();
-    nayoungMutate();
-  });
+    mutate();
+  }, [mutate]);
+  return data;
+};
+
+const Nodes = () => {
+  const barreleye = useNodeData(barreleyeConfig.ADDRESS);
+  const nayoung = useNodeData(nayoungConfig.ADDRESS);
+  const youngmin = useNodeData(youngminConfig.ADDRESS);
+
+  const nodes = [
+    { config: barreleyeConfig, data: barreleye, src: 'src/assets/barreleye.png', title: 'Barreleye' },
+    { config: nayoungConfig, data: nayoung, src: 'src/assets/nayoung.jpeg', title: 'Nayoung' },
+    { config: youngminConfig, data: youngmin, src: 'src/assets/youngmin.jpeg', title: 'Youngmin' }
+  ];
 
   return (
     <Stack>
-      <AvatarCard
-        config={barreleyeConfig}
-        src="src/assets/barreleye.png"
-        address={barreleye?.account.address ?? '-'}
-        nonce={barreleye?.account.nonce ?? '0'}
-        balance={barreleye?.account.balance ?? '0'}
-        title="Barreleye"
-      />
-
-      <AvatarCard
-        config={nayoungConfig}
-        src="src/assets/nayoung.jpeg"
-        address={nayoung?.account.address ?? '-'}
-        nonce={nayoung?.account.nonce ?? '0'}
-        balance={nayoung?.account.balance ?? '0'}
-        title="Nayoung"
-      />
-
-      <AvatarCard
-        config={youngminConfig}
-        src="src/assets/youngmin.jpeg"
-        address={youngmin?.account.address ?? '-'}
-        nonce={youngmin?.account.nonce ?? '0'}
-        balance={youngmin?.account.balance ?? '0'}
-        title="Youngmin"
-      />
+      {nodes.map(({ config, data, src, title }) => (
+        <AvatarCard
+          key={config.ADDRESS}
+          config={config}
+          src={src}
+          address={data?.account.address ?? '-'}
+          nonce={data?.account.nonce ?? '0'}
+          balance={data?.account.balance ?? '0'}
+          title={title}
+        />
+      ))}
     </Stack>
   );
 };

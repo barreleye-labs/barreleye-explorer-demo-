@@ -31,10 +31,10 @@ interface ExpandMoreProps extends IconButtonProps {
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { ...other } = props;
+  const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transform: expand ? 'rotate(180deg)' : 'rotate(0deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest
