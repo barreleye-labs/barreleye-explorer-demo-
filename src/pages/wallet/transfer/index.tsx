@@ -26,6 +26,12 @@ import { Char, Crypto } from '@utils';
 
 import { BTN_TYPE, buttonHandlerStore, commonPrivateKeyStore } from '@src/stores';
 
+interface AddressInfo {
+  from: string;
+  balance: string;
+  nonce: string;
+}
+
 const txDefaultData = (): TransactionRequest => {
   return {
     nonce: '',
@@ -52,11 +58,19 @@ const Transfer = () => {
   const getSigner = useCallback(() => Crypto.generatePublicKey(privateKey), [privateKey]);
   const getSignature = useSignature(privateKey, tx);
 
-  const initData = useCallback(() => {
+  const init = useCallback(() => {
     setTx(txDefaultData());
     setStep(1);
     setPrivateKey('');
   }, [setPrivateKey, setTx]);
+
+  const updateFromAddressInfo = useCallback(
+    ({ nonce, from, balance }: AddressInfo) => {
+      setTx((tx) => ({ ...tx, nonce, from }));
+      setBalance(() => Char.hexToBalance(balance));
+    },
+    [setTx, setBalance]
+  );
 
   useEffect(() => {
     if (commonPrivateKey) {
@@ -64,28 +78,27 @@ const Transfer = () => {
 
       const fetchData = async () => {
         const { nonce, balance } = await fetchAccount(commonAddress);
-        setTx((tx) => ({ ...tx, nonce, from: commonAddress }));
-        setBalance(() => Char.hexToBalance(balance));
+        updateFromAddressInfo({ from: commonAddress, nonce, balance });
       };
 
       fetchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function fetchAccount(address = commonAddress): Promise<{ nonce: string; balance: string; address: string }> {
+  async function fetchAccount(address = commonAddress): Promise<AddressInfo> {
     const { data, error } = await AccountService().GetOneById(address);
 
-    if (error) return { balance: '0', nonce: '0', address: '' };
+    if (error) return { balance: '0', nonce: '0', from: '' };
 
-    return data.account;
+    const { balance, nonce, address: from } = data.account;
+    return { balance, nonce, from };
   }
 
-  const sendTransaction = useCallback(async () => {
+  const createTxInfo = () => {
     const { r, s } = getSignature(tx.nonce);
     const { x, y } = getSigner();
 
-    const { error } = await TransactionsService().Send({
+    return {
       ...tx,
       value: Char.add0x(Char.numberToHex(Number(tx.value))),
       to: Char.remove0x(tx.to),
@@ -93,23 +106,26 @@ const Transfer = () => {
       signatureS: s,
       signerX: x,
       signerY: y
-    });
+    };
+  };
+
+  const sendTransaction = useCallback(async () => {
+    const { error } = await TransactionsService().Send(createTxInfo());
 
     if (error)
       return showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
 
     setLoading(BTN_TYPE.TRANSFER);
     setTimeout(async () => {
-      showToast({ variant: 'success', message: 'Transaction transfer was successful!' });
-
-      const { nonce, balance, address } = await fetchAccount(tx.from);
+      const { nonce, balance, from } = await fetchAccount(tx.from);
 
       if (commonPrivateKey) {
-        setTx((tx) => ({ ...tx, nonce, from: address }));
-        setBalance(Char.hexToBalance(balance));
+        updateFromAddressInfo({ from, nonce, balance });
       } else {
-        initData();
+        init();
       }
+
+      showToast({ variant: 'success', message: 'Transaction transfer was successful!' });
 
       setLoading(BTN_TYPE.TRANSFER);
     }, 13000);
@@ -140,15 +156,12 @@ const Transfer = () => {
     return true;
   };
 
-  const onSubmit = useCallback(async () => {
+  const onNext = useCallback(async () => {
     if (step === 1) {
       const from = await Crypto.privateKeyToAddress(privateKey);
       const { nonce, balance } = await fetchAccount(from);
-
-      setTx((tx) => ({ ...tx, nonce, from }));
-      setBalance(Char.hexToBalance(balance));
+      updateFromAddressInfo({ from, nonce, balance });
       setStep(2);
-
       return;
     }
 
@@ -168,7 +181,7 @@ const Transfer = () => {
           disabled={loadingTransfer}
           loading={loadingTransfer}
           onChange={(e) => onChangePrivateKey(e)}
-          onClick={onSubmit}
+          onClick={onNext}
         />
       ) : (
         <>
@@ -215,7 +228,7 @@ const Transfer = () => {
                   disabled={disabled}
                   className="button"
                   size="large"
-                  onClick={onSubmit}
+                  onClick={onNext}
                 >
                   Send Transaction
                 </LoadingButton>

@@ -14,7 +14,7 @@ export class AxiosHttpClient {
   async get<T>(url: string): Promise<API.Response<T>> {
     try {
       const { data }: AxiosResponse<API.SuccessResponse<T>> = await this.axiosInstance.get(url);
-      console.log('axios response :: ', data);
+      // console.log('axios response :: ', data);
       return data;
     } catch (error) {
       console.error('axios error response :: ', this.extractErrorResponse(error as AxiosError));
@@ -25,7 +25,7 @@ export class AxiosHttpClient {
   async post<T>(url: string, params?: object | string): Promise<API.Response<T>> {
     try {
       const { data }: AxiosResponse<API.SuccessResponse<T>> = await this.axiosInstance.post(url, params);
-      console.log('axios response :: ', data);
+      // console.log('axios response :: ', data);
       return data;
     } catch (error) {
       console.error('axios error response :: ', this.extractErrorResponse(error as AxiosError));
@@ -34,7 +34,6 @@ export class AxiosHttpClient {
   }
 
   private handleError(error: AxiosError): API.ErrorResponse {
-    console.log(error);
     if (!error.response) {
       return { data: undefined as never, statusCode: 503, error: { message: 'Service Unavailable' } };
     }
