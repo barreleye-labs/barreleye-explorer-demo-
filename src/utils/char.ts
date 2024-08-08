@@ -20,9 +20,12 @@ function uint8ArrayToHex(bytes: Uint8Array): string {
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
 }
-
 function numberToHex(value: number): string {
-  return value.toString(16).padStart(2, '0');
+  let hex: string = value.toString(16);
+  if (hex.length % 2 == 1) {
+    hex = '0'.concat(hex);
+  }
+  return hex;
 }
 
 function remove0x(hex: string): string {

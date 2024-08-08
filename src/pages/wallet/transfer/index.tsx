@@ -95,7 +95,7 @@ const Transfer = () => {
   }
 
   const createTxInfo = () => {
-    const { r, s } = getSignature(tx.nonce);
+    const { r, s } = getSignature();
     const { x, y } = getSigner();
 
     return {
