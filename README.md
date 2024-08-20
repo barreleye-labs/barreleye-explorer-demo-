@@ -95,3 +95,9 @@ Now your project should be up and running successfully. Happy coding! 🚀
 ## Where is the Core?
 - [Barreleye Core](https://github.com/barreleye-labs/barreleye)
 
+
+## Issues
+The project is now successfully running. Happy coding! 🚀 <br/>
+
+If you encounter any issues or have suggestions for improvement, please use the [GitHub Issues](https://github.com/barreleye-labs/barreleyescan/issues) tab. <br/> Your feedback is invaluable in helping to enhance the project!
+
