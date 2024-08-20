@@ -1,17 +1,14 @@
 import { useCallback } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import { CheckCircle, FilterNone } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
+import { TransactionsService } from '@services';
+import { Detail, Row } from 'barrel-ui-kit';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import transactions from '@services/transactions';
-
-import Detail from '@components/detail';
 import LinkUnderline from '@components/link';
-import Row from '@components/row';
 
 import { Char, Time } from '@utils';
 
@@ -23,7 +20,7 @@ function Transaction() {
   const location = useLocation();
   const { hash } = useParams();
 
-  const { data } = transactions().GetOneById(Char.remove0x(hash as string));
+  const { data } = TransactionsService().GetOneById(Char.remove0x(hash as string));
 
   const setTime = useCallback(() => {
     const formatUnix = Time.formatUnixNano(data?.transaction.timestamp as number);
@@ -35,7 +32,7 @@ function Transaction() {
   return (
     <Container>
       <Detail
-        icon={<FilterNoneIcon />}
+        icon={<FilterNone />}
         title={location.pathname.split('/')[1].toUpperCase()}
         subheader={Char.ellipsisMiddle(hash as string)}
       >
@@ -58,7 +55,7 @@ function Transaction() {
             </Row>
             <Row label="TxReceipt Status">
               <div className="badge">
-                <CheckCircleIcon />
+                <CheckCircle />
                 <span>Success</span>
               </div>
             </Row>

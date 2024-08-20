@@ -1,10 +1,10 @@
-import { AccountResponse } from '@type/dto/account';
+import { useApi } from '@hooks';
 
-import useApi from '@hooks/useApi.ts';
+import { AccountResponse } from '@type/dto/account';
 
 import { service } from '@src/utils/http';
 
-const AccountService = () => {
+export const AccountService = () => {
   const PATH: string = '/api';
 
   function GetOneByIdQuery(id: string, option?: Record<string, boolean>) {
@@ -22,4 +22,3 @@ const AccountService = () => {
     GetOneById
   };
 };
-export default AccountService;

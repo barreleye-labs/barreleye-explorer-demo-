@@ -5,9 +5,8 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { LoadingButton } from '@mui/lab';
 import { CardContent, Typography } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
+import { Card, CustomInput } from 'barrel-ui-kit';
 
-import Card from '@components/card';
-import { CustomInput } from '@components/input';
 import LinkUnderline from '@components/link';
 
 import { Char, Crypto } from '@utils';

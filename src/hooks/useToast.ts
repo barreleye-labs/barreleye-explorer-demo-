@@ -7,7 +7,7 @@ interface ShowToastParams {
   message: string;
 }
 
-const useToast = () => {
+export const useToast = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const showToast = useCallback(
@@ -22,5 +22,3 @@ const useToast = () => {
 
   return showToast;
 };
-
-export default useToast;

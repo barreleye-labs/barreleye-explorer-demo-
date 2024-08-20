@@ -1,17 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ArrowDownward as ArrowDownwardIcon, ArrowForward as ArrowForwardIcon } from '@mui/icons-material';
 import TableCell from '@mui/material/TableCell';
-
-import transactions from '@services/transactions';
+import { TransactionsService } from '@services';
+import { SkeletonTable, Table, TableBody, TableHead, Time } from 'barrel-ui-kit';
 
 import { Transaction } from '@type/dto/transaction';
 
 import LinkUnderline from '@components/link';
-import { SkeletonTable } from '@components/skeleton';
-import { Table, TableBody, TableHead } from '@components/table';
-import IntervalTimestamp from '@components/time';
 
 import { Char } from '@utils';
 
@@ -34,7 +30,7 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
 
   const [page, setPage] = useState(1);
 
-  const { data } = transactions().GetAll({ page, size });
+  const { data } = TransactionsService().GetAll({ page, size });
 
   const handleChange = (_, value: number) => {
     setPage(value);
@@ -88,7 +84,7 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
                 </TableCell>
 
                 <TableCell align="left" style={{ width: 200 }}>
-                  <IntervalTimestamp data={row.timestamp as number}></IntervalTimestamp>
+                  <Time data={row.timestamp as number}></Time>
                 </TableCell>
 
                 {!isSimpleData && (

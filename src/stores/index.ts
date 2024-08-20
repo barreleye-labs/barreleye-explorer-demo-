@@ -1,2 +1,2 @@
-export { buttonHandlerStore, BTN_TYPE } from '@src/stores/buttonHandler.store.ts';
-export { commonPrivateKeyStore } from '@src/stores/commonPrivateKey.store.ts';
+export { buttonHandlerStore, BTN_TYPE } from './buttonHandler.store.ts';
+export { commonPrivateKeyStore } from './commonPrivateKey.store.ts';

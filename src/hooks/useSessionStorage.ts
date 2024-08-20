@@ -4,7 +4,7 @@ import { Char, Crypto } from '@utils';
 
 type UseSessionStorage<T> = [() => T | string | undefined, (value: string) => void, () => void, string | undefined];
 
-function useSessionStorage<T>(key: string): UseSessionStorage<T> {
+export function useSessionStorage<T>(key: string): UseSessionStorage<T> {
   const [address, setAddress] = useState<string | undefined>();
 
   const getSession = (): T | string | undefined => {
@@ -50,5 +50,3 @@ function useSessionStorage<T>(key: string): UseSessionStorage<T> {
 
   return [getSession, setSession, removeSession, address];
 }
-
-export default useSessionStorage;

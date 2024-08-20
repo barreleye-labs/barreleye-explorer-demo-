@@ -1,8 +1,8 @@
+import { useApi } from '@hooks';
+
 import { BlockResponse, BlocksResponse } from '@type/dto/block';
 
-import useApi from '@hooks/useApi';
-
-const BlocksService = () => {
+export const BlocksService = () => {
   const PATH: string = '/api/blocks';
 
   function GetAll({ page, size }: Record<string, number>) {
@@ -25,4 +25,3 @@ const BlocksService = () => {
     GetLast
   };
 };
-export default BlocksService;

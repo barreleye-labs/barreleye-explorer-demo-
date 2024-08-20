@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 
-import AccountService from '@services/account';
-
-import AvatarCard from '@components/card/AvatarCard';
+import { AccountService } from '@services';
+import { AvatarCard } from 'barrel-ui-kit';
 
 import { barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConfig';
 

@@ -4,11 +4,11 @@ import SortIcon from '@mui/icons-material/Sort';
 import Button from '@mui/joy/Button';
 import ListJoy from '@mui/joy/List';
 import ListSubheader from '@mui/joy/ListSubheader';
+import { type Route, routes } from '@router/routes.ts';
 
 import { Container } from '@components/menu/styles';
 
 import MenuItems from './components/MenuItems';
-import { type Route, routes } from './routes';
 
 const Menu = () => {
   const [active, setActive] = useState(false);

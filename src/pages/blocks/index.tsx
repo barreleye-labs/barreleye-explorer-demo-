@@ -4,19 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-
-import BlocksService from '@services/blocks';
+import { BlocksService } from '@services';
+import { SkeletonTable, Table, TableBody, TableCell, TableHead, Time } from 'barrel-ui-kit';
 
 import { Block } from '@type/dto/block';
 
 import LinkUnderline from '@components/link';
-import { SkeletonTable } from '@components/skeleton';
-import { Table, TableBody, TableCell, TableHead } from '@components/table';
-import IntervalTimestamp from '@components/time';
 
 import { Char } from '@utils';
 
-import { Button, TableRow } from './styles.tsx';
+import { Button, TableRow } from './styles';
 
 interface Props {
   isPagination: boolean;
@@ -77,7 +74,7 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
               </TableCell>
 
               <TableCell align="left">
-                <IntervalTimestamp data={row.timestamp}></IntervalTimestamp>
+                <Time data={row.timestamp}></Time>
               </TableCell>
 
               <TableCell align="left">{row.txCount}</TableCell>

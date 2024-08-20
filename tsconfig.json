@@ -21,17 +21,19 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@services/*": ["src/services/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts": ["src/layouts/index.tsx"],
-      "@layouts/*": ["src/layouts/*"],
-      "@pages/*": ["src/pages/*"],
+      "@services": ["src/services/index"],
+      "@hooks": ["src/hooks/index"],
       "@utils": ["src/utils/index"],
+      "@utils/*": ["src/utils/*"],
+      "@stores": ["src/stores/index"],
       "@type/*": ["src/types/*"],
       "@config/*": ["src/config/*"],
       "@styles/*": ["src/styles/*"],
-      "@router/*": ["src/router/*"]
+      "@router/*": ["src/router/*"],
+      "@layouts": ["src/layouts/index.tsx"],
+      "@layouts/*": ["src/layouts/*"],
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"]
     },
 
     /* Linting */

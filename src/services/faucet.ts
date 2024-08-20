@@ -1,11 +1,11 @@
+import { useApi } from '@hooks';
+
 import { AccountResponse } from '@type/dto/account';
 import { FaucetRequest, TransactionResponse } from '@type/dto/transaction';
 
-import useApi from '@hooks/useApi';
+import { service } from '@utils/http';
 
-import { service } from '@src/utils/http';
-
-const FaucetService = () => {
+export const FaucetService = () => {
   const PATH: string = '/api';
 
   function GetOneById(id: string) {
@@ -25,4 +25,3 @@ const FaucetService = () => {
     Send
   };
 };
-export default FaucetService;

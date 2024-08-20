@@ -4,8 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ListItemContent, ListItemDecorator } from '@mui/joy';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
-
-import { type RouteContent } from '../routes';
+import { type RouteContent } from '@router/routes.ts';
 
 interface Props {
   content: RouteContent[];

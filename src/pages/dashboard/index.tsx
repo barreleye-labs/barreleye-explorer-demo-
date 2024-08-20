@@ -1,23 +1,23 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import FlagIcon from '@mui/icons-material/Flag';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import PolylineIcon from '@mui/icons-material/Polyline';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import {
+  AccessAlarm,
+  AccessTime,
+  Flag,
+  KeyboardArrowRight,
+  Polyline,
+  ReceiptLong,
+  ViewInAr
+} from '@mui/icons-material';
 import Grid from '@mui/material/Unstable_Grid2';
-
-import BlocksService from '@services/blocks';
-import TransactionsService from '@services/transactions.ts';
+import { BlocksService, TransactionsService } from '@services';
+import { TextLogo } from 'barrel-ui-kit';
 
 import Blocks from '@pages/blocks';
 import Transactions from '@pages/transactions';
 
 import Link from '@components/link';
-import Logo from '@components/logo';
 
 import { Char } from '@utils';
 
@@ -92,7 +92,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper ">
-                <ViewInArIcon />
+                <ViewInAr />
               </div>
               <div>
                 <BlockHeightCard />
@@ -106,7 +106,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper">
-                <AccessTimeIcon />
+                <AccessTime />
               </div>
               <div>
                 <SupplyCard />
@@ -120,7 +120,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper ">
-                <AccessAlarmIcon />
+                <AccessAlarm />
               </div>
               <div>
                 <h2>
@@ -136,7 +136,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper ">
-                <PolylineIcon />
+                <Polyline />
               </div>
               <div>
                 <Highlight>
@@ -156,7 +156,7 @@ const Dashboard = () => {
           <Card>
             <div className="signature">
               <img src="src/assets/barreleye.png" />
-              <Logo />
+              <TextLogo bold="Barreleye" semi="scan" onClick={() => navigate('/')} />
             </div>
           </Card>
         </Grid>
@@ -165,7 +165,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper ">
-                <FlagIcon />
+                <Flag />
               </div>
               <div>
                 <BlockProposerCard />
@@ -179,7 +179,7 @@ const Dashboard = () => {
           <Card>
             <div className="wrapper">
               <div className="icon-wrapper ">
-                <ReceiptLongIcon />
+                <ReceiptLong />
               </div>
               <div>
                 <TotalTxCountCard />
@@ -199,7 +199,7 @@ const Dashboard = () => {
                   <h2>Recent Blocks</h2>
 
                   <Link underlink="View All" onClick={() => navigate('/blocks')}>
-                    <KeyboardArrowRightIcon />
+                    <KeyboardArrowRight />
                   </Link>
                 </div>
                 <Blocks isSimpleData={true} isPagination={false} size={7} />
@@ -215,7 +215,7 @@ const Dashboard = () => {
                 <div className="header">
                   <h2>Recent Transactions</h2>
                   <Link underlink="View All" onClick={() => navigate('/transactions')}>
-                    <KeyboardArrowRightIcon />
+                    <KeyboardArrowRight />
                   </Link>
                 </div>
                 <Transactions isSimpleData={true} isPagination={false} size={7} />

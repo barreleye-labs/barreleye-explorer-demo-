@@ -1,11 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useSessionStorage from '@hooks/useSessionStorage';
-
-import { PrivateForm } from '@components/form';
-
-import { commonPrivateKeyStore } from '@src/stores';
+import { useSessionStorage } from '@hooks';
+import { commonPrivateKeyStore } from '@stores';
+import { Form } from 'barrel-ui-kit';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -23,7 +21,7 @@ const SignIn = () => {
   }, [privateKey]);
 
   return (
-    <PrivateForm
+    <Form
       title="Enter an acceptable private key."
       sub=" Please enter your private key."
       defaultValue={privateKey}

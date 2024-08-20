@@ -1,30 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import CallMadeIcon from '@mui/icons-material/CallMade';
+import { useInput, useSignature, useToast } from '@hooks';
+import { ArrowBackIosNew, CallMade } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { CardContent, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
-
-import AccountService from '@services/account';
-import TransactionsService from '@services/transactions';
+import { AccountService, TransactionsService } from '@services';
+import { BTN_TYPE, buttonHandlerStore, commonPrivateKeyStore } from '@stores';
+import { Card, Form, Input } from 'barrel-ui-kit';
 
 import { TransactionRequest } from '@type/dto/transaction';
 
-import useInput from '@hooks/useInput';
-import useSignature from '@hooks/useSignature.ts';
-import useToast from '@hooks/useToast.ts';
-
-import Card from '@components/card';
-import { PrivateForm } from '@components/form';
-import { Input } from '@components/input';
 import LinkUnderline from '@components/link';
 
 import { Char, Crypto } from '@utils';
-
-import { BTN_TYPE, buttonHandlerStore, commonPrivateKeyStore } from '@src/stores';
 
 interface AddressInfo {
   from: string;
@@ -174,7 +165,7 @@ const Transfer = () => {
   return (
     <>
       {step === 1 && !commonPrivateKey ? (
-        <PrivateForm
+        <Form
           title="Enter an acceptable private key."
           sub="Please enter the private key to sign the transaction."
           defaultValue={privateKey}
@@ -190,7 +181,7 @@ const Transfer = () => {
               <>
                 {step === 2 && !commonPrivateKey && (
                   <Button className="return" onClick={() => setStep(1)}>
-                    <ArrowBackIosNewIcon />
+                    <ArrowBackIosNew />
                     Back
                   </Button>
                 )}
@@ -246,7 +237,7 @@ const Transfer = () => {
 
             <CardActions className="wrapper">
               <div className="icon-wrapper">
-                <CallMadeIcon />
+                <CallMade />
               </div>
             </CardActions>
           </Card>

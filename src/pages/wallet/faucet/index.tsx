@@ -1,23 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useToast } from '@hooks';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import { LoadingButton } from '@mui/lab';
 import { CardContent, Typography, debounce } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
+import { AccountService, FaucetService } from '@services';
+import { BTN_TYPE, buttonHandlerStore } from '@stores';
+import { Card, Input } from 'barrel-ui-kit';
 
-import AccountService from '@services/account.ts';
-import FaucetService from '@services/faucet';
-
-import useToast from '@hooks/useToast.ts';
-
-import Card from '@components/card';
-import { Input } from '@components/input';
 import LinkUnderline from '@components/link';
 
 import { Char } from '@utils';
-
-import { BTN_TYPE, buttonHandlerStore } from '@src/stores/index.ts';
 
 const Faucet = () => {
   const { loadingFaucet, setLoading } = buttonHandlerStore();

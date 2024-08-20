@@ -1,25 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import RssFeedIcon from '@mui/icons-material/RssFeed';
+import { useSessionStorage } from '@hooks';
+import { AutoAwesome, RssFeed } from '@mui/icons-material';
 import Button from '@mui/joy/Button';
 import { Chip } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-
-import AccountService from '@services/account';
-
-import useSessionStorage from '@hooks/useSessionStorage';
+import { AccountService } from '@services';
+import { commonPrivateKeyStore } from '@stores';
+import { ResponsiveModal, Ripple } from 'barrel-ui-kit';
 
 import Breadcrumb from '@components/breadcrumb';
-import { ResponsiveModal } from '@components/modal';
-import Ripple from '@components/ripple';
 
 import { Char, Crypto } from '@utils';
-
-import { commonPrivateKeyStore } from '@src/stores';
 
 import { ButtonWrapper, Container } from './styles';
 
@@ -98,7 +93,7 @@ const DefaultLayout = () => {
                   variant="outlined"
                   color="neutral"
                   size="lg"
-                  startDecorator={<AutoAwesomeIcon />}
+                  startDecorator={<AutoAwesome />}
                   onClick={() => modalHandle()}
                 >
                   Clear Private Key
@@ -127,7 +122,7 @@ const DefaultLayout = () => {
                 </HtmlTooltip>
               </>
             )}
-            <Chip className="responsive-mobile-none" label="Main Network" variant="outlined" icon={<RssFeedIcon />} />
+            <Chip className="responsive-mobile-none" label="Main Network" variant="outlined" icon={<RssFeed />} />
           </ButtonWrapper>
 
           <Breadcrumb />

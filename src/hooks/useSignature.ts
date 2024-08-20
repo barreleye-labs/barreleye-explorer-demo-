@@ -29,7 +29,7 @@ const getMessage = (txUintArray: Uint8Array): string => Char.uint8ArrayToHex(txU
 
 const signMessage = (message: string, privateKey: string): Signature => Crypto.signMessage(message, privateKey);
 
-const useSignature = (privateKey: string, tx: TransactionRequest) => {
+export const useSignature = (privateKey: string, tx: TransactionRequest) => {
   return useCallback((): Signature => {
     const { from, to, nonce, value, data } = tx;
     const sig = createTransactionRequest(nonce, from, to, value, data);
@@ -39,5 +39,3 @@ const useSignature = (privateKey: string, tx: TransactionRequest) => {
     return signMessage(message, privateKey);
   }, [privateKey, tx]);
 };
-
-export default useSignature;

@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useRef } from 'react';
 
 import { MutatorCallback } from 'swr';
 
-function useInterval(callback: MutatorCallback, delay: number) {
+export function useInterval(callback: MutatorCallback, delay: number) {
   const savedCallback: MutableRefObject<MutatorCallback | undefined> = useRef();
 
   useEffect(() => {
@@ -21,5 +21,3 @@ function useInterval(callback: MutatorCallback, delay: number) {
     }
   }, [delay]);
 }
-
-export default useInterval;

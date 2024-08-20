@@ -1,18 +1,16 @@
 import { useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import { FilterNone } from '@mui/icons-material';
 import Skeleton from '@mui/material/Skeleton';
+import { BlocksService } from '@services';
+import { Detail, Row } from 'barrel-ui-kit';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import BlocksService from '@services/blocks';
-
 import { Button } from '@pages/blocks/styles';
 
-import Detail from '@components/detail';
 import LinkUnderline from '@components/link';
-import Row from '@components/row';
 
 import { Char, Time } from '@utils';
 
@@ -49,7 +47,7 @@ function Block() {
     <Detail
       onClickPrev={() => changeBlockPage(Number(height) - 1)}
       onClickAfter={() => changeBlockPage(Number(height) + 1)}
-      icon={<FilterNoneIcon />}
+      icon={<FilterNone />}
       title={location.pathname.split('/')[1].toUpperCase()}
       subheader={height as string}
       isAction={true}

@@ -1,10 +1,10 @@
-import { TransactionRequest, TransactionResponse, TransactionsResponse } from '@type/dto/transaction';
+import { useApi } from '@hooks';
 
-import useApi from '@hooks/useApi';
+import { TransactionRequest, TransactionResponse, TransactionsResponse } from '@type/dto/transaction';
 
 import { service } from '@src/utils/http';
 
-const TransactionsService = () => {
+export const TransactionsService = () => {
   const PATH: string = '/api';
 
   function GetAll({ page, size }: Record<string, number>) {
@@ -27,4 +27,3 @@ const TransactionsService = () => {
     Send
   };
 };
-export default TransactionsService;

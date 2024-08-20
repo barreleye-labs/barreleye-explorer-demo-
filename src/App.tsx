@@ -1,5 +1,4 @@
 import Layout from '@layouts';
-import { SnackbarProvider } from 'notistack';
 
 import './App.css';
 
