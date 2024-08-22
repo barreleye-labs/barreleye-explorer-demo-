@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=builder /app .
 
 # 환경 변수 설정
-ENV NODE_ENV=production
+ENV NODE_ENV=production1
 ENV VITE_API_SERVER_URL=http://172.31.8.44:9000
 
 # 애플리케이션 실행
