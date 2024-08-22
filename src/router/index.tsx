@@ -5,7 +5,7 @@ import loadable from '@loadable/component';
 export const router = createBrowserRouter([
   {
     Component: loadable(() => import('@src/layouts')),
-    errorElement: loadable(() => import('@pages/errorPage')),
+    ErrorBoundary: loadable(() => import('@pages/errorPage')),
     children: [
       {
         path: '/',

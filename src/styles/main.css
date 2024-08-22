@@ -10,3 +10,16 @@ body {
     touch-action: none;
     position: fixed;
 }
+
+
+#root {
+    width: 100vw;
+    height: 100dvh;
+}
+
+.notistack-CollapseWrapper{
+    @media (max-width: 576px) {
+        transform: translateY(20px);
+    }
+}
+
