@@ -11,7 +11,7 @@ import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import BlocksService from '@services/blocks';
-import TransactionsService from '@services/transactions.ts';
+import TransactionsService from '@services/transactions';
 
 import Blocks from '@pages/blocks';
 import Transactions from '@pages/transactions';
