@@ -11,8 +11,8 @@ RUN npm install --production1
 # 모든 소스 코드를 복사
 COPY . .
 
-# 빌드 단계 (필요 시 추가)
-# RUN npm run build
+# 빌드 단계
+RUN npm run build
 
 # Stage 2: Runner
 FROM node:18-alpine as runner
