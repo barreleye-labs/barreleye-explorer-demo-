@@ -47,7 +47,7 @@ const DefaultLayout = () => {
   const [getSession, _, removeSession] = useSessionStorage<string>('key');
   const privateKey = getSession();
 
-  const { data } = useAccountQuery(commonAddress ?? undefined, { enabled: true });
+  const { data } = useAccountQuery(commonAddress ?? undefined);
   const modalHandle = useCallback(() => {
     setOpen((open) => !open);
   }, [open]);

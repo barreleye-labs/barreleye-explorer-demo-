@@ -25,7 +25,7 @@ const Faucet = () => {
 
   const [accountAddress, setAccountAddress] = useState<string>('');
   const [isEnoughBalanceError, setIsBalanceEnoughError] = useState<boolean>(false);
-  const { data, refetch } = useAccountQuery(accountAddress);
+  const { data, refetch } = useAccountQuery(accountAddress, { enabled: false });
 
   const validateBalance = (balance: string): boolean => {
     return Number(Char.hexToDecimal(balance)) >= 10;

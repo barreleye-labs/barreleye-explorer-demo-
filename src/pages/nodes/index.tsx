@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import useAccountQuery from '@queries/useAccountQuery';
 
 import AvatarCard from '@components/card/AvatarCard';
@@ -31,10 +29,8 @@ const Nodes = () => {
 };
 
 const Node = ({ config, src, title }: ConfigType) => {
-  const { data, refetch } = useAccountQuery(config.ADDRESS);
-  useEffect(() => {
-    refetch();
-  }, []);
+  const { data } = useAccountQuery(config.ADDRESS);
+
   return (
     <AvatarCard
       key={config.ADDRESS}

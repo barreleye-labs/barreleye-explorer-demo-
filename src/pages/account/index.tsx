@@ -19,7 +19,7 @@ const Account = () => {
   const showToast = useToast();
 
   const { address } = useParams();
-  const { data } = useAccountQuery(address, { enabled: true });
+  const { data } = useAccountQuery(address);
 
   const onValidCheck = debounce(async (address: string) => {
     Char.isAddress(address)
