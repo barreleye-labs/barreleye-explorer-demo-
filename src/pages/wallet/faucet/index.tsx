@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
@@ -6,9 +6,8 @@ import { LoadingButton } from '@mui/lab';
 import { CardContent, Typography, debounce } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
 import useAccountQuery from '@queries/useAccountQuery';
+import useFaucetQuery from '@queries/useFaucetQuery';
 import { BTN_TYPE, buttonHandlerStore } from '@stores';
-
-import FaucetService from '@services/faucet';
 
 import useToast from '@hooks/useToast';
 
@@ -25,7 +24,9 @@ const Faucet = () => {
 
   const [accountAddress, setAccountAddress] = useState<string>('');
   const [isEnoughBalanceError, setIsBalanceEnoughError] = useState<boolean>(false);
+
   const { data, refetch } = useAccountQuery(accountAddress, { enabled: false });
+  const { mutateAsync: sendFaucet } = useFaucetQuery().Send();
 
   const validateBalance = (balance: string): boolean => {
     return Number(Char.hexToDecimal(balance)) >= 10;
@@ -44,27 +45,27 @@ const Faucet = () => {
     setAccountAddress(address);
   }, 500);
 
-  const onSubmit = useCallback(async () => {
-    const { error } = await FaucetService().Send({
-      accountAddress: Char.remove0x(accountAddress)
-    });
+  const onSubmit = async () => {
+    try {
+      await sendFaucet({
+        accountAddress: Char.remove0x(accountAddress)
+      });
 
-    if (error) {
-      return error.message === 'faucet time limit'
+      setLoading(BTN_TYPE.FAUCET);
+
+      setTimeout(async () => {
+        setLoading(BTN_TYPE.FAUCET);
+
+        showToast({ variant: 'success', message: 'Your Barrel Faucet request accepted.' });
+
+        await refetch();
+      }, 13000);
+    } catch (error) {
+      (error as Error).response.data.error.message === 'faucet time limit'
         ? showToast({ variant: 'error', message: 'faucet can only be used once per hour.\n' })
         : showToast({ variant: 'error', message: 'Invalid address format.\n' });
     }
-
-    setLoading(BTN_TYPE.FAUCET);
-
-    setTimeout(async () => {
-      setLoading(BTN_TYPE.FAUCET);
-
-      showToast({ variant: 'success', message: 'Your Barrel Faucet request accepted.' });
-
-      await refetch();
-    }, 13000);
-  }, [accountAddress]);
+  };
 
   const disabled = useMemo(() => !accountAddress || isEnoughBalanceError, [accountAddress, isEnoughBalanceError]);
 
