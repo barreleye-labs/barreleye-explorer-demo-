@@ -1,47 +1,50 @@
 import { useEffect } from 'react';
 
-import AccountService from '@services/account';
+import useAccountQuery from '@queries/useAccountQuery';
 
 import AvatarCard from '@components/card/AvatarCard';
 
-import { barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConfig';
+import { NodeConfig, barreleyeConfig, nayoungConfig, youngminConfig } from '@config/nodeConfig';
 
 import { Stack } from './styles';
 
-const useNodeData = (address: string) => {
-  const { data, mutate } = AccountService().GetOneByIdQuery(address, { refreshInterval: 60000 });
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
-  return data;
-};
+interface ConfigType {
+  config: NodeConfig;
+  src: string;
+  title: string;
+}
 
 const Nodes = () => {
-  const barreleye = useNodeData(barreleyeConfig.ADDRESS);
-  const nayoung = useNodeData(nayoungConfig.ADDRESS);
-  const youngmin = useNodeData(youngminConfig.ADDRESS);
-
-  const nodes = [
-    { config: barreleyeConfig, data: barreleye, src: 'src/assets/barreleye.png', title: 'Barreleye' },
-    { config: nayoungConfig, data: nayoung, src: 'src/assets/nayoung.jpeg', title: 'Nayoung' },
-    { config: youngminConfig, data: youngmin, src: 'src/assets/youngmin.jpeg', title: 'Youngmin' }
+  const nodes: ConfigType[] = [
+    { config: barreleyeConfig, src: 'src/assets/barreleye.png', title: 'Barreleye' },
+    { config: nayoungConfig, src: 'src/assets/nayoung.jpeg', title: 'Nayoung' },
+    { config: youngminConfig, src: 'src/assets/youngmin.jpeg', title: 'Youngmin' }
   ];
 
   return (
     <Stack>
-      {nodes.map(({ config, data, src, title }) => (
-        <AvatarCard
-          key={config.ADDRESS}
-          config={config}
-          src={src}
-          address={data?.account.address ?? '-'}
-          nonce={data?.account.nonce ?? '0'}
-          balance={data?.account.balance ?? '0'}
-          title={title}
-        />
+      {nodes.map((data) => (
+        <Node key={data.config.KEY} {...data} />
       ))}
     </Stack>
   );
 };
 
+const Node = ({ config, src, title }: ConfigType) => {
+  const { data, refetch } = useAccountQuery(config.ADDRESS);
+  useEffect(() => {
+    refetch();
+  }, []);
+  return (
+    <AvatarCard
+      key={config.ADDRESS}
+      config={config}
+      src={src}
+      address={data?.account.address ?? '-'}
+      nonce={data?.account.nonce ?? '0'}
+      balance={data?.account.balance ?? '0'}
+      title={title}
+    />
+  );
+};
 export default Nodes;

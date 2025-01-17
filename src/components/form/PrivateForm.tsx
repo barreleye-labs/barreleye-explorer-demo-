@@ -1,23 +1,39 @@
-import { ChangeEvent } from 'react';
+import { useEffect } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { CardContent } from '@mui/material';
 import { Typography } from '@mui/material';
 import CardActions from '@mui/material/CardActions';
+import { commonPrivateKeyStore } from '@stores';
+
+import useInput from '@hooks/useInput';
 
 import Card from '@components/card';
 import { CustomInput } from '@components/input';
 
+import { Crypto } from '@utils';
+
 interface Props {
   title: string;
   sub: string;
-  defaultValue: string;
   disabled?: boolean;
   loading?: boolean;
-  onChange?: (e: ChangeEvent) => void;
-  onClick?: () => void;
+  onNext: ({ privateKey, address }: { privateKey: string; address: string }) => void;
 }
-const PrivateForm = ({ title, loading, sub, defaultValue, disabled, onChange, onClick }: Props) => {
+const PrivateForm = ({ title, loading, sub, onNext }: Props) => {
+  const { address: commonAddress, privateKey: commonPrivateKey } = commonPrivateKeyStore();
+  const [privateKey, onChangePrivateKey] = useInput('');
+
+  const onSubmit = async () => {
+    const address = await Crypto.privateKeyToAddress(privateKey);
+    onNext({ privateKey, address });
+  };
+
+  useEffect(() => {
+    if (commonPrivateKey) {
+      onNext({ privateKey: commonPrivateKey, address: commonAddress });
+    }
+  }, []);
   return (
     <Card>
       <CardContent>
@@ -31,16 +47,16 @@ const PrivateForm = ({ title, loading, sub, defaultValue, disabled, onChange, on
         <CustomInput
           label="Private Key"
           placeholder="Enter the private key"
-          defaultValue={defaultValue}
-          onChange={(e) => onChange && onChange(e)}
+          defaultValue={privateKey}
+          onChange={onChangePrivateKey}
         />
         <CardActions>
           <LoadingButton
             loading={loading}
-            disabled={defaultValue.length < 1}
+            disabled={privateKey.length < 1}
             className="button"
             size="large"
-            onClick={onClick}
+            onClick={onSubmit}
           >
             Access
           </LoadingButton>

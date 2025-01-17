@@ -4,6 +4,7 @@ type Fetcher = <T>(url: string) => Promise<T>;
 
 const fetcher: Fetcher = async (url) => {
   try {
+    console.log(url);
     const response: AxiosResponse<{ data: any }> = await axios.get(url);
     return response.data.data;
   } catch (error) {

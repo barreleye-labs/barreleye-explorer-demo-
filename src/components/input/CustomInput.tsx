@@ -14,7 +14,7 @@ interface Props {
   placeholder?: string;
   isCopyBtn?: boolean;
   disabled?: boolean;
-  onChange?: (e: ChangeEvent) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const COPY_TEXT = {

@@ -8,8 +8,8 @@ import { Chip } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-
-import AccountService from '@services/account';
+import useAccountQuery from '@queries/useAccountQuery';
+import { commonPrivateKeyStore } from '@stores';
 
 import useSessionStorage from '@hooks/useSessionStorage';
 
@@ -18,8 +18,6 @@ import { ResponsiveModal } from '@components/modal';
 import Ripple from '@components/ripple';
 
 import { Char, Crypto } from '@utils';
-
-import { commonPrivateKeyStore } from '@src/stores';
 
 import { ButtonWrapper, Container } from './styles';
 
@@ -48,9 +46,8 @@ const DefaultLayout = () => {
 
   const [getSession, _, removeSession] = useSessionStorage<string>('key');
   const privateKey = getSession();
-  const { data } = AccountService().GetOneByIdQuery(commonAddress && commonAddress, {
-    refreshInterval: true
-  });
+
+  const { data } = useAccountQuery(commonAddress ?? undefined, { enabled: true });
   const modalHandle = useCallback(() => {
     setOpen((open) => !open);
   }, [open]);
@@ -70,7 +67,7 @@ const DefaultLayout = () => {
   }, []);
 
   useEffect(() => {
-    fetchAddress().then(() => {});
+    fetchAddress();
   }, [commonPrivateKey]);
 
   const fetchAddress = async () => {
