@@ -109,7 +109,8 @@ const Transfer = () => {
       return false;
     }
 
-    const balance = accountInfo?.account.balance;
+    const balance = Char.hexToDecimal(accountInfo!.account.balance);
+
     if (balance === '0') {
       showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
       return false;
@@ -130,7 +131,7 @@ const Transfer = () => {
   }, [privateKey]);
 
   useEffect(() => {
-    updateState();
+    updateState(accountInfo?.account.address);
   }, [accountInfo]);
 
   const onNext = async (privateKeyStore: { privateKey: string; address: string }) => {

@@ -42,7 +42,7 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
   const { data } = useBlocksQuery().GetAll({ page, size });
 
   const handleChange = useCallback(
-    (_e: ChangeEvent, value: number) => {
+    (_, value: number) => {
       setPage(value);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

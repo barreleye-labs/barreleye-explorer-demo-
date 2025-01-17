@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useState } from 'react';
+import { ChangeEvent, MouseEvent, memo, useState } from 'react';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -27,7 +27,7 @@ const CustomInput = memo(
     const [copyButtonText, setCopyButtonText] = useState(COPY_TEXT.DEFAULT);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
     };
 
@@ -49,7 +49,7 @@ const CustomInput = memo(
             value={defaultValue}
             id="standard-adornment-password"
             type={showPassword ? 'text' : 'password'}
-            onChange={(e) => onChange && onChange(e)}
+            onChange={onChange}
             placeholder={placeholder}
             endAdornment={
               <InputAdornment position="end">

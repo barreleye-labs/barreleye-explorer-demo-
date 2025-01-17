@@ -29,7 +29,6 @@
     "lodash-es": "^4.17.21",
     "notistack": "^3.0.1",
     "sha256": "^0.2.0",
-    "swr": "^2.2.4",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
