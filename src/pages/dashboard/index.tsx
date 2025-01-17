@@ -9,8 +9,8 @@ import PolylineIcon from '@mui/icons-material/Polyline';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Grid from '@mui/material/Unstable_Grid2';
+import useBlocksQuery from '@queries/useBlocksQuery';
 
-import BlocksService from '@services/blocks';
 import TransactionsService from '@services/transactions';
 
 import Blocks from '@pages/blocks';
@@ -28,7 +28,7 @@ import { Card, Container, DashboardTable, Highlight } from './styles';
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const { data } = BlocksService().GetAll({ size: 7, page: 1 });
+  const { data } = useBlocksQuery().GetAll({ size: 7, page: 1 });
   const { data: txData } = TransactionsService().GetAll({ size: 7, page: 1 });
 
   const BlockHeightCard = useCallback(() => {

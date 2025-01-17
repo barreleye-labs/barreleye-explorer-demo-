@@ -3,10 +3,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import Skeleton from '@mui/material/Skeleton';
+import useBlocksQuery from '@queries/useBlocksQuery';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
-import BlocksService from '@services/blocks';
 
 import { Button } from '@pages/blocks/styles';
 
@@ -22,8 +21,8 @@ function Block() {
   const location = useLocation();
   const { height } = useParams();
 
-  const { data } = BlocksService().GetOneById(height as string);
-  const { data: lastBlock } = BlocksService().GetLast();
+  const { data } = useBlocksQuery().GetOneById(height as string);
+  const { data: lastBlock } = useBlocksQuery().GetLast();
 
   const changeBlockPage = useCallback(
     (setHeight: number) => {
