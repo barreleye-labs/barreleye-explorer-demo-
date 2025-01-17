@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-
-import BlocksService from '@services/blocks';
+import useBlocksQuery from '@queries/useBlocksQuery.ts';
 
 import { Block } from '@type/dto/block';
 
@@ -40,10 +39,10 @@ const Blocks = ({ isPagination = true, size = 10, isSimpleData = false }: Props)
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
-  const { data } = BlocksService().GetAll({ page, size });
+  const { data } = useBlocksQuery().GetAll({ page, size });
 
   const handleChange = useCallback(
-    (_e: ChangeEvent, value: number) => {
+    (_, value: number) => {
       setPage(value);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

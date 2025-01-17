@@ -1,12 +1,11 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import useAccountQuery from '@queries/useAccountQuery';
 import { debounce } from 'lodash-es';
 
-import AccountService from '@services/account';
-
-import useToast from '@hooks/useToast.ts';
+import useToast from '@hooks/useToast';
 
 import Card from '@components/card';
 import Detail from '@components/detail';
@@ -15,32 +14,12 @@ import SearchInput from '@components/searchInput';
 
 import { Char } from '@utils';
 
-const defaultAccount = () => {
-  return { nonce: '0', balance: '0' };
-};
-
 const Account = () => {
   const navigate = useNavigate();
-  const { address } = useParams();
   const showToast = useToast();
-  const [account, setAccount] = useState<{ nonce: string; balance: string }>(defaultAccount());
 
-  useEffect(() => {
-    if (address) {
-      fetchAccount();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
-
-  async function fetchAccount() {
-    const { data, error } = await AccountService().GetOneById(Char.remove0x(address as string));
-
-    if (error) {
-      return setAccount(defaultAccount());
-    }
-
-    setAccount(data.account);
-  }
+  const { address } = useParams();
+  const { data } = useAccountQuery(address);
 
   const onValidCheck = debounce(async (address: string) => {
     Char.isAddress(address)
@@ -50,7 +29,6 @@ const Account = () => {
 
   const onChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     onValidCheck(Char.remove0x(e.target.value));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -64,8 +42,8 @@ const Account = () => {
           <>
             <Row label="Address" content={address}></Row>
 
-            <Row label="Balance" content={`${Char.hexToBalance(account.balance)} Barrel `}></Row>
-            <Row label="Nonce" content={Char.hexToDecimal(account.nonce)}></Row>
+            <Row label="Balance" content={`${data ? Char.hexToBalance(data.account.balance) : '0'} Barrel `}></Row>
+            <Row label="Nonce" content={data ? Char.hexToDecimal(data.account.nonce) : '0'}></Row>
           </>
         )}
       </Detail>

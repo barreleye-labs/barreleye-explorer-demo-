@@ -31,7 +31,9 @@
       "@type/*": ["src/types/*"],
       "@config/*": ["src/config/*"],
       "@styles/*": ["src/styles/*"],
-      "@router/*": ["src/router/*"]
+      "@router": ["src/router/index"],
+      "@queries/*": ["src/queries/*"],
+      "@stores": ["src/stores/index"]
     },
 
     /* Linting */

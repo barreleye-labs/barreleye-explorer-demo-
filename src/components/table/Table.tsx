@@ -1,6 +1,6 @@
-import { ChangeEvent, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
-import Pagination from '@mui/material/Pagination';
+import Pagination, { PaginationProps } from '@mui/material/Pagination';
 
 import { Container, TableContainer, TableWrapper } from './styles';
 
@@ -9,7 +9,7 @@ interface Props {
   isPagination?: boolean;
   count?: number;
   page?: number;
-  onChange?: (event: ChangeEvent, page: number) => void;
+  onChange?: PaginationProps['onChange'];
 }
 const Table = ({ isPagination = true, count, page, children, onChange }: Props) => {
   return (

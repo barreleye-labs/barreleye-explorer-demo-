@@ -4,10 +4,9 @@ import { useLocation, useParams } from 'react-router-dom';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import Skeleton from '@mui/material/Skeleton';
+import useTransactionsQuery from '@queries/useTransactionsQuery';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
-import transactions from '@services/transactions';
 
 import Detail from '@components/detail';
 import LinkUnderline from '@components/link';
@@ -23,7 +22,7 @@ function Transaction() {
   const location = useLocation();
   const { hash } = useParams();
 
-  const { data } = transactions().GetOneById(Char.remove0x(hash as string));
+  const { data } = useTransactionsQuery().GetOneById(Char.remove0x(hash as string));
 
   const setTime = useCallback(() => {
     const formatUnix = Time.formatUnixNano(data?.transaction.timestamp as number);

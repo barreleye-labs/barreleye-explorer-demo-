@@ -1,20 +1,16 @@
 import { TransactionRequest, TransactionResponse, TransactionsResponse } from '@type/dto/transaction';
 
-import useApi from '@hooks/useApi';
-
 import { service } from '@src/utils/http';
 
 const TransactionsService = () => {
-  const PATH: string = '/api';
-
-  function GetAll({ page, size }: Record<string, number>) {
-    return useApi<TransactionsResponse>(`${PATH}/txs?page=${page}&size=${size}`, {
-      refreshInterval: true
-    });
+  async function GetAll({ page, size }: Record<string, number>) {
+    const { data } = await service.get<TransactionsResponse>(`/txs?page=${page}&size=${size}`);
+    return data;
   }
 
-  function GetOneById(id: string) {
-    return useApi<TransactionResponse>(`${PATH}/txs/${id}`, {});
+  async function GetOneById(id: string) {
+    const { data } = await service.get<TransactionResponse>(`/txs/${id}`);
+    return data;
   }
 
   async function Send(params: TransactionRequest) {

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-import { Signature, TransactionRequest } from '@type/dto';
+import { Signature } from '@type/dto/signature';
+import { TransactionRequest } from '@type/dto/transaction';
 
 import { Char, Crypto } from '@utils';
 
