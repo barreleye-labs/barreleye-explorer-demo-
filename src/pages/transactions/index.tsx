@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TableCell from '@mui/material/TableCell';
-
-import transactions from '@services/transactions';
+import useTransactionsQuery from '@queries/useTransactionsQuery';
 
 import { Transaction } from '@type/dto/transaction';
 
@@ -28,15 +27,14 @@ const Transactions = ({ isPagination = true, size = 10, isSimpleData = false }: 
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     setMobile(isMobile);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigator.userAgent]);
 
   const [page, setPage] = useState(1);
 
-  const { data } = transactions().GetAll({ page, size });
+  const { data } = useTransactionsQuery().GetAll({ page, size });
 
   const handleChange = (_, value: number) => {
+    console.log(_);
     setPage(value);
   };
 

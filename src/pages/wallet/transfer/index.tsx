@@ -8,15 +8,14 @@ import { CardContent, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 import useAccountQuery from '@queries/useAccountQuery';
+import useTransactionsQuery from '@queries/useTransactionsQuery';
 import { BTN_TYPE, buttonHandlerStore, commonPrivateKeyStore } from '@stores';
-
-import TransactionsService from '@services/transactions';
 
 import { TransactionRequest } from '@type/dto/transaction';
 
 import useInput from '@hooks/useInput';
 import useSignature from '@hooks/useSignature';
-import useToast from '@hooks/useToast.ts';
+import useToast from '@hooks/useToast';
 
 import Card from '@components/card';
 import { PrivateForm } from '@components/form';
@@ -47,7 +46,7 @@ const Transfer = () => {
   const [tx, onChange, setTx] = useInput<TransactionRequest>(txDefaultData());
   const [step, setStep] = useState(1);
   const { data: accountInfo, refetch: fetchAccount } = useAccountQuery(address, { enabled: false });
-
+  const { mutateAsync: sendTransaction } = useTransactionsQuery().Send();
   const init = useCallback(() => {
     setTx(txDefaultData());
     setStep(1);
@@ -76,24 +75,27 @@ const Transfer = () => {
     };
   };
 
-  const sendTransaction = useCallback(async () => {
-    const { error } = await TransactionsService().Send(createTxInfo());
+  const onSubmit = useCallback(async () => {
+    if (!isValidAddress()) return;
 
-    if (error)
-      return showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
-
-    setLoading(BTN_TYPE.TRANSFER);
-    setTimeout(async () => {
-      if (commonPrivateKey) {
-        fetchAccount();
-      } else {
-        init();
-      }
-
-      showToast({ variant: 'success', message: 'Transaction transfer was successful!' });
+    try {
+      await sendTransaction(createTxInfo());
 
       setLoading(BTN_TYPE.TRANSFER);
-    }, 13000);
+      setTimeout(async () => {
+        if (commonPrivateKey) {
+          await fetchAccount();
+        } else {
+          init();
+        }
+
+        showToast({ variant: 'success', message: 'Transaction transfer was successful!' });
+
+        setLoading(BTN_TYPE.TRANSFER);
+      }, 13000);
+    } catch (error) {
+      showToast({ variant: 'error', message: 'Insufficient balance. You can receive coins through faucet.' });
+    }
   }, [tx]);
 
   const isValidAddress = (): boolean => {
@@ -137,12 +139,6 @@ const Transfer = () => {
     setPrivateKey(privateKey);
 
     setStep(2);
-  };
-
-  const onSubmit = () => {
-    if (isValidAddress()) {
-      sendTransaction();
-    }
   };
 
   const disabled = useMemo(() => (step === 1 ? !privateKey : !tx.to || !tx.value), [tx, step, privateKey]);

@@ -10,8 +10,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Grid from '@mui/material/Unstable_Grid2';
 import useBlocksQuery from '@queries/useBlocksQuery';
-
-import TransactionsService from '@services/transactions';
+import useTransactionsQuery from '@queries/useTransactionsQuery';
 
 import Blocks from '@pages/blocks';
 import Transactions from '@pages/transactions';
@@ -29,7 +28,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { data } = useBlocksQuery().GetAll({ size: 7, page: 1 });
-  const { data: txData } = TransactionsService().GetAll({ size: 7, page: 1 });
+  const { data: txData } = useTransactionsQuery().GetAll({ size: 7, page: 1 });
 
   const BlockHeightCard = useCallback(() => {
     const height = Number(data?.totalCount) - 1;
